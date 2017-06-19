@@ -1,0 +1,24 @@
+os:
+  - osx
+env:
+  global:
+    - PYTHON_DEBUG=1
+  matrix:
+install:
+    - HOMEBREW_NO_AUTO_UPDATE=1 brew install python3 coreutils
+    - pip3 install pyzmq
+before_script:
+    - git clone https://github.com/bitcoin/bitcoin.git --depth 1
+    - cd bitcoin && export SRCDIR=`pwd` && cd ../
+    - wget "https://bitcoin.jonasschnelli.ch/builds/184/bitcoin-0.14.99-osx64.tar.gz"
+    - tar -xzvf ./bitcoin-0.*.99-osx64.tar.gz
+    - cd ./bitcoin-0.*.99/bin/ && export BUILDDIR=`pwd` && mkdir src && mv ./*bitcoin* ./src/
+    - cd ${SRCDIR} && cp ../config.ini ./test/
+    - python -c "import os;f=open('./test/config.ini');c=f.read();c=c.replace('__BUILDDIR__', os.getenv('BUILDDIR'));c=c.replace('__SRCDIR__', os.getenv('SRCDIR'));f=open('./test/config.ini','w');f.write(c);"
+script:
+    - ${BUILDDIR}/src/test_bitcoin
+    - ${SRCDIR}/test/util/bitcoin-util-test.py -v
+    - ${SRCDIR}/test/functional/test_runner.py --extended --coverage
+after_script:
+    - cd ${SRCDIR} && git log -1
+    - cd ${BUILDDIR} && shasum -a 256 ./src/*

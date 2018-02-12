@@ -12,7 +12,7 @@ before_script:
     - cd bitcoin && export SRCDIR=`pwd` && cd ../
     - export BUILD_ID=`curl 'https://bitcoin.jonasschnelli.ch/build/nightly/latest'|grep embed-responsive-item|gsed -e 's/^.*builds\(\/[0-9]\+\/\).*$/\1/g'` && echo ${BUILD_ID}
     - export TAR_GITIAN_NAME=`curl "https://bitcoin.jonasschnelli.ch/builds${BUILD_ID}"|grep "\-osx64.tar.gz"|gsed -e 's/^.*\(bitcoin-0.[0-9]\+.99-osx64\.tar\.gz\).*/\1/g'` && echo ${TAR_GITIAN_NAME}
-    - wget "https://bitcoin.jonasschnelli.ch/builds${BUILD_ID}${TAR_GITIAN_NAME}"
+    - wget --no-verbose "https://bitcoin.jonasschnelli.ch/builds${BUILD_ID}${TAR_GITIAN_NAME}"
     - tar -xzvf ./${TAR_GITIAN_NAME}
     - cd ./bitcoin-0.*.99/bin/ && export BUILDDIR=`pwd` && mkdir src && mv ./*bitcoin* ./src/
     - cd ${SRCDIR} && cp ../config.ini ./test/
@@ -20,7 +20,7 @@ before_script:
 script:
     - ${BUILDDIR}/src/test_bitcoin
     - ${SRCDIR}/test/util/bitcoin-util-test.py -v
-    - ${SRCDIR}/test/functional/test_runner.py --extended --coverage
+    - ${SRCDIR}/test/functional/test_runner.py --extended --coverage -x feature_pruning,feature_dbcrash,wallet_backup,feature_block
 after_script:
     - cd ${SRCDIR} && git log -1
     - cd ${BUILDDIR} && shasum -a 256 ./src/*

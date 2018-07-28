@@ -13,9 +13,9 @@ before_script:
     - cd ../
     - export BUILD_ID=$(curl 'https://bitcoin.jonasschnelli.ch/build/nightly/latest'|grep embed-responsive-item|gsed -e 's/^.*builds\(\/[0-9]\+\/\).*$/\1/g')
     - echo ${BUILD_ID}
-    - export TAR_GITIAN_NAME=$(curl "https://bitcoin.jonasschnelli.ch/builds${BUILD_ID}"|grep "\-osx64.tar.gz"|gsed -e 's/^.*\(bitcoin-0.[0-9]\+.99-osx64\.tar\.gz\).*/\1/g')
+    - export TAR_GITIAN_NAME=$(curl "https://bitcointools.jonasschnelli.ch/data/builds${BUILD_ID}"|grep "\-osx64.tar.gz"|gsed -e 's/^.*\(bitcoin-0.[0-9]\+.99-osx64\.tar\.gz\).*/\1/g')
     - echo ${TAR_GITIAN_NAME}
-    - wget --no-verbose "https://bitcoin.jonasschnelli.ch/builds${BUILD_ID}${TAR_GITIAN_NAME}"
+    - wget --no-verbose "https://bitcointools.jonasschnelli.ch/data/builds${BUILD_ID}${TAR_GITIAN_NAME}"
     - tar -xzvf ./${TAR_GITIAN_NAME}
     - cd ./bitcoin-0.*.99/bin/
     - export BUILDDIR=$(pwd)

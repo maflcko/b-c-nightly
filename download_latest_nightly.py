@@ -18,8 +18,17 @@ def get_lines(url):
 def main():
     root_folder = os.path.abspath(os.path.dirname(__file__))
     src_dir = os.path.join(root_folder, 'bitcoin', '')
+
+    print('Make sure to')
+    print('git clone bitcoin')
+    print('export PYTHONIOENCODING="UTF-8"')
+    print('Install pyzmq')
+    #print(os.environ['PYTHONIOENCODING'])
+    print(sys.stdin.encoding)
+    print(sys.stdout.encoding)
+    assert 'UTF-8' == sys.stdin.encoding == sys.stdout.encoding
     assert os.path.isdir(src_dir)  # Make sure to git clone bitcoin
-    #import zmq #noqa
+    import zmq  #noqa
 
     for line in get_lines(LATEST_URL):
         if 'embed-responsive-item' in line:

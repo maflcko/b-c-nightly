@@ -4,26 +4,15 @@ env:
   global:
   matrix:
 install:
-    - HOMEBREW_NO_AUTO_UPDATE=1 brew install python3 coreutils gnu-sed
+    - HOMEBREW_NO_AUTO_UPDATE=1 brew install python3 coreutils
     - pip3 install pyzmq
 before_script:
     - git clone https://github.com/bitcoin/bitcoin.git --depth 1
     - cd bitcoin
     - export SRCDIR=$(pwd)
     - cd ../
-    - export BUILD_ID=$(curl 'https://bitcoin.jonasschnelli.ch/build/nightly/latest'|grep embed-responsive-item|gsed -e 's/^.*builds\(\/[0-9]\+\/\).*$/\1/g')
-    - echo ${BUILD_ID}
-    - export TAR_GITIAN_NAME=$(curl "https://bitcointools.jonasschnelli.ch/data/builds${BUILD_ID}"|grep "\-osx64.tar.gz"|gsed -e 's/^.*\(bitcoin-0.[0-9]\+.99-osx64\.tar\.gz\).*/\1/g')
-    - echo ${TAR_GITIAN_NAME}
-    - wget --no-verbose "https://bitcointools.jonasschnelli.ch/data/builds${BUILD_ID}${TAR_GITIAN_NAME}"
-    - tar -xzvf ./${TAR_GITIAN_NAME}
-    - cd ./bitcoin-0.*.99/bin/
-    - export BUILDDIR=$(pwd)
-    - mkdir src
-    - mv ./*bitcoin* ./src/
-    - cd ${SRCDIR}
-    - cp ../config.ini ./test/
-    - python2 -c "import os;f=open('./test/config.ini');c=f.read();c=c.replace('__BUILDDIR__', os.getenv('BUILDDIR'));c=c.replace('__SRCDIR__', os.getenv('SRCDIR'));f=open('./test/config.ini','w');f.write(c);"
+    - python3 ./download_latest_nightly.py | tee ./output
+    - export BUILDDIR=$(tail -1 ./output)
 script:
     - ${BUILDDIR}/src/test_bitcoin
     - ${SRCDIR}/test/util/bitcoin-util-test.py -v

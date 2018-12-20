@@ -1,6 +1,6 @@
 version: 1.0.{build}
-build:
-  verbosity: minimal
+image: Visual Studio 2017
+build: off
 notifications:
 - provider: Email
   to:
@@ -8,3 +8,26 @@ notifications:
   on_build_success: false
   on_build_failure: true
   on_build_status_changed: true
+environment:
+  PATH: 'C:\Python37-x64;C:\Python37-x64\Scripts;%PATH%'
+  PYTHONUTF8: 1
+install:
+  pip install pyzmq
+before_test:
+  - git clone https://github.com/bitcoin/bitcoin.git --depth 1
+  - cd bitcoin
+  - set SRCDIR=%CD%
+  - cd ..
+  - python .\download_latest_nightly.py > output
+  - type output
+  - ps: ${env:BUILDDIR}=(Get-Content -Tail 1 output)
+test_script:
+  - '%BUILDDIR%\src\test_bitcoin.exe'
+  - python %SRCDIR%\test\util\bitcoin-util-test.py -v
+  - python %SRCDIR%\test\functional\test_runner.py --extended --coverage -x feature_pruning,feature_dbcrash,wallet_backup,feature_block --force
+after_test:
+  - cd %SRCDIR%
+  - git log -1
+  - cd %BUILDDIR%
+  - Get-FileHash .\src\*
+deploy: off

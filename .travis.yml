@@ -16,7 +16,7 @@ before_script:
 script:
     - ${BUILDDIR}/src/test_bitcoin
     - ${SRCDIR}/test/util/bitcoin-util-test.py -v
-    - ${SRCDIR}/test/functional/test_runner.py --extended --coverage -x feature_pruning,feature_dbcrash,wallet_backup,feature_block
+    - ${SRCDIR}/test/functional/test_runner.py --extended --coverage -x feature_pruning,feature_dbcrash,wallet_backup,feature_block,p2p_invalid_messages
 after_script:
     - cd ${SRCDIR}
     - git log -1

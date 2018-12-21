@@ -1,0 +1,27 @@
+os:
+  - windows
+language: bash
+env:
+  global:
+  matrix:
+install:
+    - python --version
+    - choco install python3
+    - powershell 'C:\Python37\Scripts\pip install pyzmq'
+before_script:
+    - git clone https://github.com/bitcoin/bitcoin.git --depth 1
+    - cd bitcoin
+    - export SRCDIR=$(pwd)
+    - cd ../
+    - powershell './download_latest_nightly.py' > ./output
+    - cat ./output
+    - export BUILDDIR=$(tail -1 ./output)
+script:
+    - ${BUILDDIR}/src/test_bitcoin.exe
+    - powershell '${SRCDIR}/test/util/bitcoin-util-test.py -v'
+    - powershell '${SRCDIR}/test/functional/test_runner.py --extended --coverage -x p2p_invalid_messages'
+after_script:
+    - cd ${SRCDIR}
+    - git log -1
+    - cd ${BUILDDIR}
+    - shasum -a 256 ./src/*

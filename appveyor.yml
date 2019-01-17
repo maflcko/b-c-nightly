@@ -24,7 +24,7 @@ before_test:
 test_script:
   - '%BUILDDIR%\src\test_bitcoin.exe'
   - python %SRCDIR%\test\util\bitcoin-util-test.py -v
-  - python %SRCDIR%\test\functional\test_runner.py --extended --coverage -x feature_pruning,feature_dbcrash,wallet_backup,feature_block --force
+  - python %SRCDIR%\test\functional\test_runner.py --extended --coverage -x feature_pruning,feature_dbcrash,wallet_backup,feature_block --force --combinedlogslen=4000
 after_test:
   - cd %SRCDIR%
   - git log -1

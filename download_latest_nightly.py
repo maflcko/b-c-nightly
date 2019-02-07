@@ -68,10 +68,11 @@ def main():
     with open(config_file, 'w') as f:
         f.write(c)
 
-    print('src dir:')
-    print(src_dir)
-    print('build dir:')
-    print(build_dir)
+    with open('src_dir.txt', 'w') as f:
+        f.write(src_dir)
+    with open('build_dir.txt', 'w') as f:
+        f.write(build_dir)
+
 
 if __name__ == "__main__":
     main()

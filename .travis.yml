@@ -5,23 +5,28 @@ env:
   global:
   matrix:
 install:
-    - python --version
     - choco install python3
+    - export PYTHON="C:\Python37\python"
+    - powershell "${PYTHON} --version"
     - powershell 'C:\Python37\Scripts\pip install pyzmq'
+    - export PYTHONIOENCODING="UTF-8"
 before_script:
     - git clone https://github.com/bitcoin/bitcoin.git --depth 1
     - cd bitcoin
     - export SRCDIR=$(pwd)
+    - echo $SRCDIR
     - cd ../
-    - powershell './download_latest_nightly.py' > ./output
-    - cat ./output
-    - export BUILDDIR=$(tail -1 ./output)
+    - powershell "${PYTHON} ./download_latest_nightly.py"
+    - cat ./src_dir.txt
+    - cat ./build_dir.txt
+    - export BUILDDIR=$(tail -1 ./build_dir.txt)
+    - echo $BUILDDIR
 script:
     - ${BUILDDIR}/src/test_bitcoin.exe
-    - powershell '${SRCDIR}/test/util/bitcoin-util-test.py -v'
-    - powershell '${SRCDIR}/test/functional/test_runner.py --extended --coverage -x p2p_invalid_messages'
+    - powershell "${PYTHON} bitcoin/test/util/bitcoin-util-test.py -v"
+    - powershell "${PYTHON} bitcoin/test/functional/test_runner.py -x feature_block,p2p_segwit,feature_assumevalid,feature_config_args,feature_includeconf,interface_zmq"
 after_script:
     - cd ${SRCDIR}
     - git log -1
     - cd ${BUILDDIR}
-    - shasum -a 256 ./src/*
+    - sha256sum ./src/*

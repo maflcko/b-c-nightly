@@ -6,6 +6,7 @@ import shutil
 
 LATEST_URL = 'https://bitcoin.jonasschnelli.ch/build/nightly/latest'
 BUILD_URL = 'https://bitcointools.jonasschnelli.ch/data/builds/{}/{}'
+ARCHIVE_SNIP = '-osx64.tar.gz'
 ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-osx64\.tar\.gz'
 ARCHIVE_EXT = 'tar.gz'
 
@@ -18,7 +19,7 @@ def main():
     root_folder = os.path.abspath(os.path.dirname(__file__))
     src_dir = os.path.join(root_folder, 'bitcoin', '')
     assert os.path.isdir(src_dir)  # Make sure to git clone bitcoin
-    import zmq #noqa
+    import zmq  #noqa
 
     for line in get_lines(LATEST_URL):
         if 'embed-responsive-item' in line:
@@ -28,7 +29,7 @@ def main():
     print('build id: {}'.format(build_id))
 
     for line in get_lines(BUILD_URL.format(build_id, '')):
-        if '-osx64.tar.gz' in line:
+        if ARCHIVE_SNIP in line:
             archive_gitian_name = re.sub('^.*({}).*$'.format(ARCHIVE_RE),
                                          '\g<1>', line.strip())
     print('filename: {}'.format(archive_gitian_name))
@@ -58,10 +59,11 @@ def main():
     with open(config_file, 'w') as f:
         f.write(c)
 
-    print('src dir:')
-    print(src_dir)
-    print('build dir:')
-    print(build_dir)
+    with open('src_dir.txt', 'w') as f:
+        f.write(src_dir)
+    with open('build_dir.txt', 'w') as f:
+        f.write(build_dir)
+
 
 if __name__ == "__main__":
     main()

@@ -10,9 +10,13 @@ before_script:
     - git clone https://github.com/bitcoin/bitcoin.git --depth 1
     - cd bitcoin
     - export SRCDIR=$(pwd)
+    - echo $SRCDIR
     - cd ../
-    - python3 ./download_latest_nightly.py | tee ./output
-    - export BUILDDIR=$(tail -1 ./output)
+    - python3 ./download_latest_nightly.py
+    - cat ./src_dir.txt
+    - cat ./build_dir.txt
+    - export BUILDDIR=$(tail -1 ./build_dir.txt)
+    - echo $BUILDDIR
 script:
     - ${BUILDDIR}/src/test_bitcoin
     - ${SRCDIR}/test/util/bitcoin-util-test.py -v

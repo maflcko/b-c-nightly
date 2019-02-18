@@ -4,11 +4,13 @@ import urllib.request
 import re
 import shutil
 
-LATEST_URL = 'https://bitcoin.jonasschnelli.ch/build/nightly/latest'
-BUILD_URL = 'https://bitcointools.jonasschnelli.ch/data/builds/{}/{}'
-ARCHIVE_SNIP = '-osx64.tar.gz'
-ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-osx64\.tar\.gz'
-ARCHIVE_EXT = 'tar.gz'
+if os.getenv('TRAVIS_OS_NAME') == 'osx':
+    LATEST_URL = 'https://bitcoin.jonasschnelli.ch/build/nightly/latest'
+    BUILD_URL = 'https://bitcointools.jonasschnelli.ch/data/builds/{}/{}'
+    ARCHIVE_SNIP = '-osx64.tar.gz'
+    ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-osx64\.tar\.gz'
+    ARCHIVE_EXT = 'tar.gz'
+    EXEEXT = ''
 
 
 def get_lines(url):
@@ -18,6 +20,11 @@ def get_lines(url):
 def main():
     root_folder = os.path.abspath(os.path.dirname(__file__))
     src_dir = os.path.join(root_folder, 'bitcoin', '')
+
+    print(os.getenv('PYTHONIOENCODING'))
+    print(sys.stdin.encoding)
+    print(sys.stdout.encoding)
+    assert 'UTF-8' == sys.stdin.encoding == sys.stdout.encoding
     assert os.path.isdir(src_dir)  # Make sure to git clone bitcoin
     import zmq  #noqa
 
@@ -55,7 +62,8 @@ def main():
     with open(config_file) as f:
         c = f.read() \
         .replace('__BUILDDIR__', build_dir) \
-        .replace('__SRCDIR__', src_dir)
+        .replace('__SRCDIR__', src_dir) \
+        .replace('__EXEEXT__', EXEEXT)
     with open(config_file, 'w') as f:
         f.write(c)
 

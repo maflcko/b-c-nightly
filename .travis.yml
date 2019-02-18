@@ -1,8 +1,7 @@
-os:
-  - osx
-env:
-  global:
-  matrix:
+jobs:
+ include:
+  os:
+    - osx
 install:
     - HOMEBREW_NO_AUTO_UPDATE=1 brew install python3 coreutils
     - pip3 install pyzmq

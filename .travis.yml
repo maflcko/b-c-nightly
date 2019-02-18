@@ -1,9 +1,8 @@
-os:
-  - windows
-language: bash
-env:
-  global:
-  matrix:
+jobs:
+ include:
+  os:
+    - windows
+  language: bash
 install:
     - choco install python3
     - export PYTHON="C:\Python37\python"

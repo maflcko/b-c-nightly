@@ -4,11 +4,13 @@ import urllib.request
 import re
 import shutil
 
-LATEST_URL = 'https://bitcoin.jonasschnelli.ch/build/nightly/latest'
-BUILD_URL = 'https://bitcointools.jonasschnelli.ch/data/builds/{}/{}'
-ARCHIVE_SNIP = '-win32.zip'
-ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-win32\.zip'
-ARCHIVE_EXT = 'zip'
+if os.getenv('TRAVIS_OS_NAME') == 'windows':
+    LATEST_URL = 'https://bitcoin.jonasschnelli.ch/build/nightly/latest'
+    BUILD_URL = 'https://bitcointools.jonasschnelli.ch/data/builds/{}/{}'
+    ARCHIVE_SNIP = '-win32.zip'
+    ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-win32\.zip'
+    ARCHIVE_EXT = 'zip'
+    EXEEXT = '.exe'
 
 
 def get_lines(url):
@@ -64,7 +66,8 @@ def main():
     with open(config_file) as f:
         c = f.read() \
         .replace('__BUILDDIR__', build_dir) \
-        .replace('__SRCDIR__', src_dir)
+        .replace('__SRCDIR__', src_dir) \
+        .replace('__EXEEXT__', EXEEXT)
     with open(config_file, 'w') as f:
         f.write(c)
 

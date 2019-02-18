@@ -8,11 +8,19 @@ LATEST_URL = 'https://bitcoin.jonasschnelli.ch/build/nightly/latest'
 BUILD_URL = 'https://bitcointools.jonasschnelli.ch/data/builds/{}/{}'
 if os.getenv('TRAVIS_OS_NAME') == 'osx':
     ARCHIVE_SNIP = '-osx64.tar.gz'
+    ARCHIVE_SNIP_DEBUG = ARCHIVE_SNIP
     ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-osx64\.tar\.gz'
+    ARCHIVE_EXT = 'tar.gz'
+    EXEEXT = ''
+if os.getenv('TRAVIS_OS_NAME') == 'linux':
+    ARCHIVE_SNIP = '-x86_64-linux-gnu.tar.gz'
+    ARCHIVE_SNIP_DEBUG = '-x86_64-linux-gnu-debug.tar.gz'
+    ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-x86_64-linux-gnu(-debug)?\.tar\.gz'
     ARCHIVE_EXT = 'tar.gz'
     EXEEXT = ''
 if os.getenv('TRAVIS_OS_NAME') == 'windows':
     ARCHIVE_SNIP = '-win32.zip'
+    ARCHIVE_SNIP_DEBUG = ARCHIVE_SNIP
     ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-win32\.zip'
     ARCHIVE_EXT = 'zip'
     EXEEXT = '.exe'
@@ -42,21 +50,24 @@ def main():
 
     for line in get_lines(BUILD_URL.format(build_id, '')):
         if ARCHIVE_SNIP in line:
-            archive_gitian_name = re.sub('^.*({}).*$'.format(ARCHIVE_RE),
-                                         '\g<1>', line.strip())
+            archive_gitian_name = re.sub('^.*({}).*$'.format(ARCHIVE_RE), '\g<1>', line.strip())
+        if ARCHIVE_SNIP_DEBUG in line:
+            archive_gitian_name_dbg = re.sub('^.*({}).*$'.format(ARCHIVE_RE), '\g<1>', line.strip())
     print('filename: {}'.format(archive_gitian_name))
-    version = int(
-        re.sub('bitcoin-0.(\d+).99-.*', '\g<1>', archive_gitian_name))
+    print('filename: {}'.format(archive_gitian_name_dbg))
+    version = int(re.sub('bitcoin-0.(\d+).99-.*', '\g<1>', archive_gitian_name))
     print('version: {}'.format(version))
 
     archive_name = 'bitcoin-core-nightly.{}'.format(ARCHIVE_EXT)
+    archive_name_dbg = 'bitcoin-core-nightly-dbg.{}'.format(ARCHIVE_EXT)
     with open(archive_name, 'wb') as archive:
-        archive.write(
-            urllib.request.urlopen(
-                BUILD_URL.format(build_id, archive_gitian_name)).read())
+        archive.write(urllib.request.urlopen(BUILD_URL.format(build_id, archive_gitian_name)).read())
+    with open(archive_name_dbg, 'wb') as archive:
+        archive.write(urllib.request.urlopen(BUILD_URL.format(build_id, archive_gitian_name_dbg)).read())
 
     build_dir = os.path.join(root_folder, 'build_dir')
     shutil.unpack_archive(archive_name, build_dir)
+    shutil.unpack_archive(archive_name_dbg, build_dir)
     build_dir = os.path.join(build_dir, 'bitcoin-0.{}.99'.format(version), '')
 
     build_dir_src = os.path.join(build_dir, 'src')

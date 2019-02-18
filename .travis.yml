@@ -1,11 +1,10 @@
-jobs:
- include:
-  os:
-    - osx
-  install:
+language: bash
+env: >-
+   SHASUM="shasum -a 256"
+install:
     - HOMEBREW_NO_AUTO_UPDATE=1 brew install python3 coreutils
     - pip3 install pyzmq
-  before_script:
+before_script:
     - git clone https://github.com/bitcoin/bitcoin.git --depth 1
     - cd bitcoin
     - export SRCDIR=$(pwd)
@@ -16,27 +15,48 @@ jobs:
     - cat ./build_dir.txt
     - export BUILDDIR=$(tail -1 ./build_dir.txt)
     - echo $BUILDDIR
-  script:
+script:
     - ${BUILDDIR}/src/test_bitcoin
     - ${SRCDIR}/test/util/bitcoin-util-test.py -v
     - ${SRCDIR}/test/functional/test_runner.py --extended --coverage -x p2p_invalid_messages
-  after_script:
+after_script:
     - cd ${SRCDIR}
     - git log -1
     - cd ${BUILDDIR}
-    - shasum -a 256 ./src/*
+    - $SHASUM ./src/*
+
+
 jobs:
  include:
-  os:
-    - windows
-  language: bash
-  install:
+ - os: osx
+ - os: linux
+   dist: xenial
+   env: >-
+    SHASUM=sha256sum
+   install:
+    - pyenv versions
+    - pyenv install -l
+    - pyenv install 3.5.4
+    - pyenv global 3.5.4
+    - python3 --version
+    - python3 -m pip install zmq
+    - sudo apt install valgrind
+   script:
+    - valgrind ${BUILDDIR}/src/test_bitcoin
+    - ${SRCDIR}/test/util/bitcoin-util-test.py -v
+    - ${SRCDIR}/test/functional/test_runner.py --extended --coverage -x p2p_invalid_messages
+
+
+ - os: windows
+   env: >-
+    SHASUM=sha256sum
+   install:
     - choco install python3
     - export PYTHON="C:\Python37\python"
     - powershell "${PYTHON} --version"
     - powershell 'C:\Python37\Scripts\pip install pyzmq'
     - export PYTHONIOENCODING="UTF-8"
-  before_script:
+   before_script:
     - git clone https://github.com/bitcoin/bitcoin.git --depth 1
     - cd bitcoin
     - export SRCDIR=$(pwd)
@@ -47,12 +67,7 @@ jobs:
     - cat ./build_dir.txt
     - export BUILDDIR=$(tail -1 ./build_dir.txt)
     - echo $BUILDDIR
-  script:
+   script:
     - ${BUILDDIR}/src/test_bitcoin.exe
     - powershell "${PYTHON} bitcoin/test/util/bitcoin-util-test.py -v"
     - powershell "${PYTHON} bitcoin/test/functional/test_runner.py -x feature_block,p2p_segwit,feature_assumevalid,feature_config_args,feature_includeconf,interface_zmq"
-  after_script:
-    - cd ${SRCDIR}
-    - git log -1
-    - cd ${BUILDDIR}
-    - sha256sum ./src/*

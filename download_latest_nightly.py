@@ -4,13 +4,18 @@ import urllib.request
 import re
 import shutil
 
+LATEST_URL = 'https://bitcoin.jonasschnelli.ch/build/nightly/latest'
+BUILD_URL = 'https://bitcointools.jonasschnelli.ch/data/builds/{}/{}'
 if os.getenv('TRAVIS_OS_NAME') == 'osx':
-    LATEST_URL = 'https://bitcoin.jonasschnelli.ch/build/nightly/latest'
-    BUILD_URL = 'https://bitcointools.jonasschnelli.ch/data/builds/{}/{}'
     ARCHIVE_SNIP = '-osx64.tar.gz'
     ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-osx64\.tar\.gz'
     ARCHIVE_EXT = 'tar.gz'
     EXEEXT = ''
+if os.getenv('TRAVIS_OS_NAME') == 'windows':
+    ARCHIVE_SNIP = '-win32.zip'
+    ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-win32\.zip'
+    ARCHIVE_EXT = 'zip'
+    EXEEXT = '.exe'
 
 
 def get_lines(url):

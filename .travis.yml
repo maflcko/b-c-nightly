@@ -25,26 +25,9 @@ after_script:
     - cd ${BUILDDIR}
     - $SHASUM ./src/*
 
-
 jobs:
  include:
  - os: osx
- - os: linux
-   dist: xenial
-   env: >-
-    SHASUM=sha256sum
-   install:
-    - pyenv versions
-    - pyenv install -l
-    - pyenv install 3.5.4
-    - pyenv global 3.5.4
-    - python3 --version
-    - python3 -m pip install zmq
-    - sudo apt install valgrind
-   script:
-    - valgrind ${BUILDDIR}/src/test_bitcoin
-    - ${SRCDIR}/test/util/bitcoin-util-test.py -v
-    - ${SRCDIR}/test/functional/test_runner.py --extended --coverage -x p2p_invalid_messages
 
 
  - os: windows

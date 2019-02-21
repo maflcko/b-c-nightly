@@ -39,6 +39,7 @@ jobs:
     - powershell "${PYTHON} --version"
     - powershell 'C:\Python37\Scripts\pip install pyzmq'
     - export PYTHONIOENCODING="UTF-8"
+    - export PYTHONUTF8=1
    before_script:
     - git clone https://github.com/bitcoin/bitcoin.git --depth 1
     - cd bitcoin

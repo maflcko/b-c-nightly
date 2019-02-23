@@ -18,7 +18,7 @@ before_script:
 script:
     - ${BUILDDIR}/src/test_bitcoin
     - ${SRCDIR}/test/util/bitcoin-util-test.py -v
-    - ${SRCDIR}/test/functional/test_runner.py --extended --coverage -x p2p_invalid_messages
+    - ${SRCDIR}/test/functional/test_runner.py --extended --coverage
 after_script:
     - cd ${SRCDIR}
     - git log -1
@@ -54,4 +54,4 @@ jobs:
    script:
     - ${BUILDDIR}/src/test_bitcoin.exe
     - powershell "${PYTHON} bitcoin/test/util/bitcoin-util-test.py -v"
-    - powershell "${PYTHON} bitcoin/test/functional/test_runner.py -x feature_block,p2p_segwit,feature_assumevalid,feature_config_args,feature_includeconf,interface_zmq"
+    - powershell "${PYTHON} bitcoin/test/functional/test_runner.py --extended --coverage"

@@ -17,8 +17,8 @@ if os.getenv('TRAVIS_OS_NAME') == 'linux':
     ARCHIVE_EXT = 'tar.gz'
     EXEEXT = ''
 if os.getenv('TRAVIS_OS_NAME') == 'windows':
-    ARCHIVE_SNIP = '-win32.zip'
-    ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-win32\.zip'
+    ARCHIVE_SNIP = '-win64.zip'
+    ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-win64\.zip'
     ARCHIVE_EXT = 'zip'
     EXEEXT = '.exe'
 

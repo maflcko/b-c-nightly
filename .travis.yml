@@ -34,7 +34,7 @@ jobs:
    env: >-
     SHASUM=sha256sum
    install:
-    - choco install python3
+    - choco install python --version=3.7.5
     - export PYTHON="C:\Python37\python"
     - powershell "${PYTHON} --version"
     - powershell 'C:\Python37\Scripts\pip install pyzmq'

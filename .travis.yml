@@ -1,6 +1,7 @@
 language: bash
 env: >-
    SHASUM="shasum -a 256"
+   BIN="OSX"
 install:
     - HOMEBREW_NO_AUTO_UPDATE=1 brew install python3 coreutils
     - pip3 install pyzmq
@@ -10,7 +11,7 @@ before_script:
     - export SRCDIR=$(pwd)
     - echo $SRCDIR
     - cd ../
-    - python3 ./download_latest_nightly.py osx
+    - python3 ./download_latest_nightly.py $BIN
     - cat ./src_dir.txt
     - cat ./build_dir.txt
     - export BUILDDIR=$(tail -1 ./build_dir.txt)
@@ -28,6 +29,13 @@ after_script:
 jobs:
  include:
  - os: osx
+ - os: linux
+   arch: arm64
+   env: >-
+    SHASUM=sha256sum
+    BIN=ARM64
+   install:
+    - sudo apt update && sudo apt install python3-zmq -y
 
 
  - os: windows

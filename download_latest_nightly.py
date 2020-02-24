@@ -1,22 +1,53 @@
+import argparse
+from enum import Enum
 import os
 import sys
 import urllib.request
 import re
 import shutil
 
+
+class Bin(Enum):
+    OSX = 'OSX'
+    WIN = 'WIN'
+    LIN64 = 'LIN64'
+    ARM32 = 'ARM32'
+    ARM64 = 'ARM64'
+    RV64 = 'RV64'
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument('bin', type=Bin, choices=Bin.__members__)
+args = parser.parse_args()
+
 LATEST_URL = 'https://bitcoin.jonasschnelli.ch/gitian/build/nightly/latest'
 BUILD_URL = 'https://bitcoin.jonasschnelli.ch/gitian/builds/{}/{}'
-if os.getenv('TRAVIS_OS_NAME') == 'osx':
+if args.bin == Bin.OSX:
     ARCHIVE_SNIP = '-osx64.tar.gz'
     ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-osx64\.tar\.gz'
     ARCHIVE_EXT = 'tar.gz'
     EXEEXT = ''
-if os.getenv('TRAVIS_OS_NAME') == 'linux':
+if args.bin == Bin.LIN64:
     ARCHIVE_SNIP = '-x86_64-linux-gnu.tar.gz'
     ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-x86_64-linux-gnu(-debug)?\.tar\.gz'
     ARCHIVE_EXT = 'tar.gz'
     EXEEXT = ''
-if os.getenv('TRAVIS_OS_NAME') == 'windows':
+if args.bin == Bin.ARM32:
+    ARCHIVE_SNIP = '-arm-linux-gnueabihf.tar.gz'
+    ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-arm-linux-gnueabihf(-debug)?\.tar\.gz'
+    ARCHIVE_EXT = 'tar.gz'
+    EXEEXT = ''
+if args.bin == Bin.ARM64:
+    ARCHIVE_SNIP = '-aarch64-linux-gnu.tar.gz'
+    ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-aarch64-linux-gnu(-debug)?\.tar\.gz'
+    ARCHIVE_EXT = 'tar.gz'
+    EXEEXT = ''
+if args.bin == Bin.RV64:
+    ARCHIVE_SNIP = '-riscv64-linux-gnu.tar.gz'
+    ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-riscv64-linux-gnu(-debug)?\.tar\.gz'
+    ARCHIVE_EXT = 'tar.gz'
+    EXEEXT = ''
+if args.bin == Bin.WIN:
     ARCHIVE_SNIP = '-win64.zip'
     ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-win64\.zip'
     ARCHIVE_EXT = 'zip'

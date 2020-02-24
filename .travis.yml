@@ -10,7 +10,7 @@ before_script:
     - export SRCDIR=$(pwd)
     - echo $SRCDIR
     - cd ../
-    - python3 ./download_latest_nightly.py
+    - python3 ./download_latest_nightly.py osx
     - cat ./src_dir.txt
     - cat ./build_dir.txt
     - export BUILDDIR=$(tail -1 ./build_dir.txt)
@@ -46,7 +46,7 @@ jobs:
     - export SRCDIR=$(pwd)
     - echo $SRCDIR
     - cd ../
-    - powershell "${PYTHON} ./download_latest_nightly.py"
+    - powershell "${PYTHON} ./download_latest_nightly.py WIN"
     - cat ./src_dir.txt
     - cat ./build_dir.txt
     - export BUILDDIR=$(tail -1 ./build_dir.txt)

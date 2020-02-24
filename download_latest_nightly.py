@@ -16,8 +16,12 @@ class Bin(Enum):
     RV64 = 'RV64'
 
 
+def __str__(self):
+    return self.value
+
+
 parser = argparse.ArgumentParser()
-parser.add_argument('bin', type=Bin, choices=Bin.__members__)
+parser.add_argument('bin', type=Bin, choices=list(Bin))
 args = parser.parse_args()
 
 LATEST_URL = 'https://bitcoin.jonasschnelli.ch/gitian/build/nightly/latest'

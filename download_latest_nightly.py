@@ -4,8 +4,8 @@ import urllib.request
 import re
 import shutil
 
-LATEST_URL = 'https://bitcoin.jonasschnelli.ch/build/nightly/latest'
-BUILD_URL = 'https://bitcointools.jonasschnelli.ch/data/builds/{}/{}'
+LATEST_URL = 'https://bitcoin.jonasschnelli.ch/gitian/build/nightly/latest'
+BUILD_URL = 'https://bitcoin.jonasschnelli.ch/gitian/builds/{}/{}'
 if os.getenv('TRAVIS_OS_NAME') == 'osx':
     ARCHIVE_SNIP = '-osx64.tar.gz'
     ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-osx64\.tar\.gz'

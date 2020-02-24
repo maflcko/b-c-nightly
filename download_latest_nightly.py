@@ -69,7 +69,7 @@ def main():
     print(os.getenv('PYTHONIOENCODING'))
     print(sys.stdin.encoding)
     print(sys.stdout.encoding)
-    assert 'UTF-8' == sys.stdin.encoding == sys.stdout.encoding
+    assert 'UTF-8'.lower() == sys.stdin.encoding.lower() == sys.stdout.encoding.lower()
     assert os.path.isdir(src_dir)  # Make sure to git clone bitcoin
     import zmq  #noqa
 

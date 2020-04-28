@@ -1,6 +1,7 @@
 import argparse
 from enum import Enum
 import os
+import pathlib
 import sys
 import urllib.request
 import re
@@ -65,7 +66,7 @@ def get_lines(url):
 
 def main():
     root_folder = os.path.abspath(os.path.dirname(__file__))
-    src_dir = os.path.join(args.srcdir, '')
+    src_dir = os.path.normpath(args.srcdir.replace('/c/Users/', 'C:\\Users\\'))
 
     print(os.getenv('PYTHONIOENCODING'))
     print(sys.stdin.encoding)

@@ -21,7 +21,8 @@ def __str__(self):
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('bin', type=Bin, choices=list(Bin))
+parser.add_argument('--bin', type=Bin, choices=list(Bin))
+parser.add_argument('--srcdir', type=str)
 args = parser.parse_args()
 
 LATEST_URL = 'https://bitcoin.jonasschnelli.ch/gitian/build/nightly/latest'
@@ -64,13 +65,13 @@ def get_lines(url):
 
 def main():
     root_folder = os.path.abspath(os.path.dirname(__file__))
-    src_dir = os.path.join(root_folder, 'bitcoin', '')
+    src_dir = os.path.join(args.srcdir, '')
 
     print(os.getenv('PYTHONIOENCODING'))
     print(sys.stdin.encoding)
     print(sys.stdout.encoding)
     assert 'UTF-8'.lower() == sys.stdin.encoding.lower() == sys.stdout.encoding.lower()
-    assert os.path.isdir(src_dir)  # Make sure to git clone bitcoin
+    assert os.path.isdir(src_dir)  # Make sure to git clone bitcoin-core
     import zmq  #noqa
 
     for line in get_lines(LATEST_URL):
@@ -108,8 +109,6 @@ def main():
     with open(config_file, 'w') as f:
         f.write(c)
 
-    with open('src_dir.txt', 'w') as f:
-        f.write(src_dir)
     with open('build_dir.txt', 'w') as f:
         f.write(build_dir)
 

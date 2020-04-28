@@ -71,6 +71,7 @@ def main():
     print(sys.stdin.encoding)
     print(sys.stdout.encoding)
     assert 'UTF-8'.lower() == sys.stdin.encoding.lower() == sys.stdout.encoding.lower()
+    print(src_dir)
     assert os.path.isdir(src_dir)  # Make sure to git clone bitcoin-core
     import zmq  #noqa
 

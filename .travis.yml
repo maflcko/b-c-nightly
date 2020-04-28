@@ -60,5 +60,6 @@ jobs:
     - echo $BUILDDIR
    script:
     - ${BUILDDIR}/src/test_bitcoin.exe
-    - powershell "${PYTHON} bitcoin/test/util/bitcoin-util-test.py -v"
-    - powershell "${PYTHON} bitcoin/test/functional/test_runner.py wallet_disable wallet_multiwallet"
+    - cd ${SRCDIR}
+    - powershell "${PYTHON} ./test/util/bitcoin-util-test.py -v"
+    - powershell "${PYTHON} ./test/functional/test_runner.py wallet_disable wallet_multiwallet"

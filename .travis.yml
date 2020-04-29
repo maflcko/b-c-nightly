@@ -7,7 +7,7 @@ install:
     - HOMEBREW_NO_AUTO_UPDATE=1 brew install python3 coreutils
     - pip3 install pyzmq
 before_script:
-    - git clone https://github.com/bitcoin/bitcoin.git --depth 1 ./bitcoin-core-nightly
+    - git clone https://github.com/bitcoin/bitcoin.git ./bitcoin-core-nightly
     - cd bitcoin-core-nightly
     - export SRCDIR=$(pwd)
     - echo $SRCDIR
@@ -53,7 +53,7 @@ jobs:
     - export PYTHONIOENCODING="UTF-8"
     - export PYTHONUTF8=1
    before_script:
-    - git clone https://github.com/bitcoin/bitcoin.git --depth 1 ./bitcoin-core-nightly
+    - git clone https://github.com/bitcoin/bitcoin.git ./bitcoin-core-nightly
     - cd bitcoin-core-nightly
     - export SRCDIR=$(pwd)
     - echo $SRCDIR

@@ -36,7 +36,7 @@ jobs:
    env: >-
     SHASUM=sha256sum
     BIN=ARM64
-    TEST_RUNNER_EXTRA="--extended"
+    TEST_RUNNER_EXTRA=""
    install:
     - sudo apt update && sudo apt install python3-zmq -y
 

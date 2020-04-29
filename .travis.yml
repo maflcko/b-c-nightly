@@ -12,11 +12,14 @@ before_script:
     - export SRCDIR=$(pwd)
     - echo $SRCDIR
     - python3 ../download_latest_nightly.py --bin="${BIN}" --srcdir="${SRCDIR}"
-    - cat ./build_dir.txt
+    - export VERSION=$(tail -1 ./version.txt)
     - export BUILDDIR=$(tail -1 ./build_dir.txt)
+    - echo $VERSION
     - echo $BUILDDIR
 script:
     - ${BUILDDIR}/src/test_bitcoin
+    - cd ${SRCDIR}
+    - git checkout $VERSION
     - ${SRCDIR}/test/util/bitcoin-util-test.py -v
     - ${SRCDIR}/test/functional/test_runner.py ${TEST_RUNNER_EXTRA}
 after_script:
@@ -55,11 +58,13 @@ jobs:
     - export SRCDIR=$(pwd)
     - echo $SRCDIR
     - powershell "${PYTHON} ../download_latest_nightly.py --bin=${BIN} --srcdir=${SRCDIR}"
-    - cat ./build_dir.txt
+    - export VERSION=$(tail -1 ./version.txt)
     - export BUILDDIR=$(tail -1 ./build_dir.txt)
+    - echo $VERSION
     - echo $BUILDDIR
    script:
     - ${BUILDDIR}/src/test_bitcoin.exe
     - cd ${SRCDIR}
+    - git checkout $VERSION
     - powershell "${PYTHON} ./test/util/bitcoin-util-test.py -v"
     - powershell "${PYTHON} ./test/functional/test_runner.py wallet_disable wallet_multiwallet"

@@ -78,8 +78,7 @@ def main():
 
     for line in get_lines(LATEST_URL):
         if 'embed-responsive-item' in line:
-            build_id = int(
-                re.sub('^.*builds/([0-9]+)/.*$', '\g<1>', line.strip()))
+            build_id = int(re.sub('^.*builds/([0-9]+)/.*$', '\g<1>', line.strip()))
             break
     print('build id: {}'.format(build_id))
 

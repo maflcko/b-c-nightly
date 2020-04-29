@@ -30,32 +30,32 @@ LATEST_URL = 'https://bitcoin.jonasschnelli.ch/gitian/build/nightly/latest'
 BUILD_URL = 'https://bitcoin.jonasschnelli.ch/gitian/builds/{}/{}'
 if args.bin == Bin.OSX:
     ARCHIVE_SNIP = '-osx64.tar.gz'
-    ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-osx64\.tar\.gz'
+    ARCHIVE_RE = 'bitcoin-[a-f0-9]+-osx64\.tar\.gz'
     ARCHIVE_EXT = 'tar.gz'
     EXEEXT = ''
 if args.bin == Bin.LIN64:
     ARCHIVE_SNIP = '-x86_64-linux-gnu.tar.gz'
-    ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-x86_64-linux-gnu(-debug)?\.tar\.gz'
+    ARCHIVE_RE = 'bitcoin-[a-f0-9]+-x86_64-linux-gnu(-debug)?\.tar\.gz'
     ARCHIVE_EXT = 'tar.gz'
     EXEEXT = ''
 if args.bin == Bin.ARM32:
     ARCHIVE_SNIP = '-arm-linux-gnueabihf.tar.gz'
-    ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-arm-linux-gnueabihf(-debug)?\.tar\.gz'
+    ARCHIVE_RE = 'bitcoin-[a-f0-9]+-arm-linux-gnueabihf(-debug)?\.tar\.gz'
     ARCHIVE_EXT = 'tar.gz'
     EXEEXT = ''
 if args.bin == Bin.ARM64:
     ARCHIVE_SNIP = '-aarch64-linux-gnu.tar.gz'
-    ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-aarch64-linux-gnu(-debug)?\.tar\.gz'
+    ARCHIVE_RE = 'bitcoin-[a-f0-9]+-aarch64-linux-gnu(-debug)?\.tar\.gz'
     ARCHIVE_EXT = 'tar.gz'
     EXEEXT = ''
 if args.bin == Bin.RV64:
     ARCHIVE_SNIP = '-riscv64-linux-gnu.tar.gz'
-    ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-riscv64-linux-gnu(-debug)?\.tar\.gz'
+    ARCHIVE_RE = 'bitcoin-[a-f0-9]+-riscv64-linux-gnu(-debug)?\.tar\.gz'
     ARCHIVE_EXT = 'tar.gz'
     EXEEXT = ''
 if args.bin == Bin.WIN:
     ARCHIVE_SNIP = '-win64.zip'
-    ARCHIVE_RE = 'bitcoin-0\.[0-9]+\.99-win64\.zip'
+    ARCHIVE_RE = 'bitcoin-[a-f0-9]+-win64\.zip'
     ARCHIVE_EXT = 'zip'
     EXEEXT = '.exe'
 
@@ -87,7 +87,7 @@ def main():
         if ARCHIVE_SNIP in line:
             archive_gitian_name = re.sub('^.*({}).*$'.format(ARCHIVE_RE), '\g<1>', line.strip())
     print('filename: {}'.format(archive_gitian_name))
-    version = int(re.sub('bitcoin-0.(\d+).99-.*', '\g<1>', archive_gitian_name))
+    version = re.sub('bitcoin-([a-f0-9]+)-.*', '\g<1>', archive_gitian_name)
     print('version: {}'.format(version))
 
     archive_name = 'bitcoin-core-nightly.{}'.format(ARCHIVE_EXT)
@@ -96,7 +96,7 @@ def main():
 
     build_dir = os.path.join(root_folder, 'build_dir')
     shutil.unpack_archive(archive_name, build_dir)
-    build_dir = os.path.join(build_dir, 'bitcoin-0.{}.99'.format(version), '')
+    build_dir = os.path.join(build_dir, 'bitcoin-{}'.format(version), '')
 
     build_dir_src = os.path.join(build_dir, 'src')
     shutil.rmtree(build_dir_src, ignore_errors=True)
@@ -113,6 +113,9 @@ def main():
 
     with open('build_dir.txt', 'w') as f:
         f.write(build_dir)
+
+    with open('version.txt', 'w') as f:
+        f.write(version)
 
 
 if __name__ == "__main__":

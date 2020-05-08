@@ -14,9 +14,7 @@ task:
     CCACHE_DIR: "/tmp/ccache_dir"
   ccache_cache:
     folder: "/tmp/ccache_dir"
-  depends_built_cache:
-    folder: "/tmp/cirrus-ci-build/depends/built"
-  clone_script:
+  upstream_clone_script:
     - apt update && apt install git -y
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
     - cd bitcoin-core
@@ -40,9 +38,7 @@ task:
     CCACHE_DIR: "/tmp/ccache_dir"
   ccache_cache:
     folder: "/tmp/ccache_dir"
-  depends_built_cache:
-    folder: "/tmp/cirrus-ci-build/depends/built"
-  clone_script:
+  upstream_clone_script:
     - apt update && apt install git -y
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
     - cd bitcoin-core

@@ -1,4 +1,49 @@
 task:
+  name: "FreeBsd 12.1 amd64  [no depends, only system libs]"
+  freebsd_instance:
+    image_family: freebsd-12-1  # https://cirrus-ci.org/guide/FreeBSD/
+    cpu: 8
+    memory: 8G
+  timeout_in: 60m
+  env:
+    MAKEJOBS: "-j9"
+    CONFIGURE_OPTS: "--disable-dependency-tracking"
+    GOAL: "install"
+    TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
+    CCACHE_SIZE: "200M"
+    CCACHE_COMPRESS: 1
+    CCACHE_DIR: "/tmp/ccache_dir"
+  ccache_cache:
+    folder: "/tmp/ccache_dir"
+  install_script:
+    - pkg install -y autoconf automake boost-libs git gmake libevent libtool pkgconf python3 ccache
+    - ccache --max-size=${CCACHE_SIZE}
+    - git clone https://github.com/stewartsmith/libeatmydata.git
+    - cd libeatmydata
+    - autoreconf -i
+    - ./configure
+    - sed -i -e 's/O_DSYNC/O_SYNC/g' $(git grep -l O_DSYNC)
+    - make
+    - make install  # eatmydata
+  upstream_clone_script:
+    - apt update && apt install git -y
+    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
+    - cd bitcoin-core
+    - ./contrib/install_db4.sh $(pwd)
+  configure_script:
+    - cd bitcoin-core
+    - ./autogen.sh
+    - ./configure ${CONFIGURE_OPTS} BDB_LIBS="-L$(pwd)/db4/lib -ldb_cxx-4.8" BDB_CFLAGS="-I$(pwd)/db4/include" || ( cat config.log && false)
+  make_script:
+    - cd bitcoin-core
+    - gmake ${MAKEJOBS} ${GOAL} || ( echo "Build failure. Verbose build follows." && gmake ${GOAL} V=1 ; false )
+  check_script:
+    - cd bitcoin-core
+    - gmake check ${MAKEJOBS} VERBOSE=1
+  functional_test_script:
+    - cd bitcoin-core
+    - eatmydata ./test/functional/test_runner.py --jobs 9 --ci --extended --exclude feature_dbcrash --combinedlogslen=1000 --quiet --failfast --factor=10
+task:
   name: "x86_64 Linux  [bionic]  [system libs, no depends, valgrind]"
   container:
     image: ubuntu:18.04  # valgrind supp is for bionic
@@ -27,12 +72,12 @@ task:
   name: "x86_64 Linux  [focal]  [system libs, no depends, fuzz, valgrind]"
   container:
     image: ubuntu:20.04
-    cpu: 3
-    memory: 6G
+    cpu: 8
+    memory: 8G
   timeout_in: 60m
   env:
     FILE_ENV: "./ci/test/00_setup_env_native_fuzz_with_valgrind.sh"
-    MAKEJOBS: "-j3"
+    MAKEJOBS: "-j9"
     DANGER_RUN_CI_ON_HOST: "1"
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"

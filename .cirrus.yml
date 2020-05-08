@@ -22,6 +22,7 @@ task:
     - cd bitcoin-core
     - mv ../00_setup_env_native_valgrind.sh ./ci/test/
   ci_script:
+    - cd bitcoin-core
     - ./ci/test_run_all.sh
   use_compute_credits: $BRANCH == "master"
 task:
@@ -46,4 +47,5 @@ task:
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
     - cd bitcoin-core
   ci_script:
+    - cd bitcoin-core
     - ./ci/test_run_all.sh

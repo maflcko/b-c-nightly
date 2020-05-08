@@ -1,7 +1,7 @@
 task:
-  name: "x86_64 Linux  [focal]  [system libs, no depends, valgrind]"
+  name: "x86_64 Linux  [bionic]  [system libs, no depends, valgrind]"
   container:
-    image: ubuntu:20.04
+    image: ubuntu:18.04  # valgrind supp is for bionic
     cpu: 3
     memory: 6G
   timeout_in: 240m

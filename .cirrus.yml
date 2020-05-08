@@ -1,4 +1,29 @@
 task:
+  name: "x86_64 Linux  [focal]  [system libs, no depends, valgrind]"
+  container:
+    image: ubuntu:20.04
+    cpu: 3
+    memory: 6G
+  timeout_in: 240m
+  env:
+    FILE_ENV: "./ci/test/00_setup_env_native_valgrind.sh"
+    MAKEJOBS: "-j3"
+    DANGER_RUN_CI_ON_HOST: "1"
+    TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
+    CCACHE_SIZE: "200M"
+    CCACHE_DIR: "/tmp/ccache_dir"
+  ccache_cache:
+    folder: "/tmp/ccache_dir"
+  depends_built_cache:
+    folder: "/tmp/cirrus-ci-build/depends/built"
+  ci_script:
+    - apt update && apt install git -y
+    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
+    - cd bitcoin-core
+    - mv ../00_setup_env_native_valgrind.sh ./ci/test/
+    - ./ci/test_run_all.sh
+  use_compute_credits: $BRANCH == "master"
+task:
   name: "x86_64 Linux  [focal]  [system libs, no depends, fuzz, valgrind]"
   container:
     image: ubuntu:20.04

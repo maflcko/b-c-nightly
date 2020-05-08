@@ -16,11 +16,12 @@ task:
     folder: "/tmp/ccache_dir"
   depends_built_cache:
     folder: "/tmp/cirrus-ci-build/depends/built"
-  ci_script:
+  clone_script:
     - apt update && apt install git -y
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
     - cd bitcoin-core
     - mv ../00_setup_env_native_valgrind.sh ./ci/test/
+  ci_script:
     - ./ci/test_run_all.sh
   use_compute_credits: $BRANCH == "master"
 task:
@@ -40,8 +41,9 @@ task:
     folder: "/tmp/ccache_dir"
   depends_built_cache:
     folder: "/tmp/cirrus-ci-build/depends/built"
-  ci_script:
+  clone_script:
     - apt update && apt install git -y
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
     - cd bitcoin-core
+  ci_script:
     - ./ci/test_run_all.sh

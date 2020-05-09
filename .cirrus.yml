@@ -42,7 +42,8 @@ task:
     - gmake check ${MAKEJOBS} VERBOSE=1
   functional_test_script:
     - cd bitcoin-core
-    - eatmydata ./test/functional/test_runner.py --jobs 9 --ci --extended --exclude feature_dbcrash --combinedlogslen=1000 --quiet --failfast --factor=10
+    - sed -i -e 's/wait=5, timeout=300/wait=5, timeout=3000/g' $(git grep -l 'timeout=' test)  # Temporary FIXME
+    - eatmydata ./test/functional/test_runner.py --jobs 9 --ci --extended --exclude feature_dbcrash,p2p_timeouts --combinedlogslen=1000 --quiet --failfast --factor=10
 task:
   name: "x86_64 Linux  [bionic]  [system libs, no depends, valgrind]"
   container:
@@ -89,4 +90,6 @@ task:
     - cd bitcoin-core
   ci_script:
     - cd bitcoin-core
+    - sed -i -e "s/\-\-par',/--par', '-j',/g" ./test/fuzz/test_runner.py
+    - sed -i -e 's/FUZZ_TESTS_CONFIG}/FUZZ_TESTS_CONFIG} $MAKEJOBS /g' ./ci/test/06_script_b.sh  # Temporary FIXME
     - ./ci/test_run_all.sh

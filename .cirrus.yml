@@ -1,5 +1,5 @@
 task:
-  name: "FreeBsd 12.1 amd64  [no depends, only system libs]"
+  name: "x86_64 FreeBsd 12.1 [system libs, no depends]"
   freebsd_instance:
     image_family: freebsd-12-1  # https://cirrus-ci.org/guide/FreeBSD/
     cpu: 8

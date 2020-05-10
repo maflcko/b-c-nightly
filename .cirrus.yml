@@ -53,7 +53,7 @@ task:
   timeout_in: 240m
   env:
     FILE_ENV: "./ci/test/00_setup_env_native_valgrind.sh"
-    MAKEJOBS: "-j3"
+    MAKEJOBS: "-j4"
     DANGER_RUN_CI_ON_HOST: "1"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"

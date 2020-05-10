@@ -48,12 +48,12 @@ task:
   name: "x86_64 Linux  [bionic]  [system libs, no depends, valgrind]"
   container:
     image: ubuntu:18.04  # valgrind supp is for bionic
-    cpu: 3
-    memory: 6G
-  timeout_in: 240m
+    cpu: 8
+    memory: 8G
+  timeout_in: 120
   env:
     FILE_ENV: "./ci/test/00_setup_env_native_valgrind.sh"
-    MAKEJOBS: "-j4"
+    MAKEJOBS: "-j9"
     DANGER_RUN_CI_ON_HOST: "1"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"
@@ -68,7 +68,6 @@ task:
   ci_script:
     - cd bitcoin-core
     - ./ci/test_run_all.sh
-  use_compute_credits: $BRANCH == "master"
 task:
   name: "x86_64 Linux  [focal]  [system libs, no depends, fuzz, valgrind]"
   container:

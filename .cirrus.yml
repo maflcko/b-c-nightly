@@ -53,6 +53,7 @@ task:
   env:
     MAKEJOBS: "-j9"
     DANGER_RUN_CI_ON_HOST: "1"
+    TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
   ccache_cache:
@@ -88,6 +89,7 @@ task:
     LC_ALL: "C"
     MAKEJOBS: "-j9"
     DANGER_RUN_CI_ON_HOST: "1"
+    TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
   ccache_cache:
@@ -120,6 +122,7 @@ task:
   env:
     MAKEJOBS: "-j9"
     DANGER_RUN_CI_ON_HOST: "1"
+    TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
   ccache_cache:

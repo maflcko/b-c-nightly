@@ -26,7 +26,6 @@ task:
     - make
     - make install  # eatmydata
   upstream_clone_script:
-    - apt update && apt install git -y
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
     - cd bitcoin-core
     - ./contrib/install_db4.sh $(pwd)
@@ -43,7 +42,72 @@ task:
   functional_test_script:
     - cd bitcoin-core
     - sed -i -e 's/wait=5, timeout=300/wait=5, timeout=3000/g' $(git grep -l 'timeout=' test)  # Temporary FIXME
-    - eatmydata ./test/functional/test_runner.py --jobs 9 --ci --extended --exclude feature_dbcrash,p2p_timeouts --combinedlogslen=1000 --quiet --failfast --factor=10
+    - eatmydata ./test/functional/test_runner.py $MAKEJOBS --ci --extended --exclude feature_dbcrash,p2p_timeouts --combinedlogslen=1000 --quiet --failfast --factor=10
+task:
+  name: "x86_64 Linux  [CentOs 7]  [system libs, no depends]"
+  container:
+    image: centos:7
+    cpu: 8
+    memory: 8G
+  timeout_in: 60m
+  env:
+    MAKEJOBS: "-j9"
+    DANGER_RUN_CI_ON_HOST: "1"
+    CCACHE_SIZE: "200M"
+    CCACHE_DIR: "/tmp/ccache_dir"
+  ccache_cache:
+    folder: "/tmp/ccache_dir"
+  install_script:
+    - yum -y install epel-release
+    - yum install -y ccache gcc-c++ libtool make git python3 python36-zmq boost-devel libevent-devel libdb4-devel libdb4-cxx-devel miniupnpc-devel zeromq-devel qt5-qtbase-devel qt5-qttools-devel qrencode-devel
+    - ccache --max-size=${CCACHE_SIZE}
+  upstream_clone_script:
+    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
+  configure_script:
+    - cd bitcoin-core
+    - ./autogen.sh
+    - ./configure || ( cat config.log && false)
+  make_script:
+    - cd bitcoin-core
+    - make ${MAKEJOBS} ${GOAL} || ( echo "Build failure. Verbose build follows." && make ${GOAL} V=1 ; false )
+  check_script:
+    - cd bitcoin-core
+    - make check ${MAKEJOBS} VERBOSE=1
+  functional_test_script:
+    - cd bitcoin-core
+    - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --factor=3
+task:
+  name: "x86_64 Linux  [Alpine]  [system libs, no depends]"
+  container:
+    image: alpine:latest
+    cpu: 8
+    memory: 8G
+  timeout_in: 60m
+  env:
+    MAKEJOBS: "-j9"
+    DANGER_RUN_CI_ON_HOST: "1"
+    CCACHE_SIZE: "200M"
+    CCACHE_DIR: "/tmp/ccache_dir"
+  ccache_cache:
+    folder: "/tmp/ccache_dir"
+  install_script:
+    - apk --no-cache --update add autoconf automake g++ gcc git libtool linux-headers make pkgconfig python3 boost libevent zeromq qt5-qtbase-dev qt5-qttools-dev ccache
+    - ccache --max-size=${CCACHE_SIZE}
+  upstream_clone_script:
+    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
+  configure_script:
+    - cd bitcoin-core
+    - ./autogen.sh
+    - ./configure || ( cat config.log && false)
+  make_script:
+    - cd bitcoin-core
+    - make ${MAKEJOBS} ${GOAL} || ( echo "Build failure. Verbose build follows." && make ${GOAL} V=1 ; false )
+  check_script:
+    - cd bitcoin-core
+    - make check ${MAKEJOBS} VERBOSE=1
+  functional_test_script:
+    - cd bitcoin-core
+    - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --factor=3
 task:
   name: "x86_64 Linux  [bionic]  [system libs, no depends, valgrind]"
   container:
@@ -86,7 +150,6 @@ task:
   upstream_clone_script:
     - apt update && apt install git -y
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
-    - cd bitcoin-core
   ci_script:
     - cd bitcoin-core
     - sed -i -e "s/\-\-par',/--par', '-j',/g" ./test/fuzz/test_runner.py

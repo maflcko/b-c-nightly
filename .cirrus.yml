@@ -91,7 +91,7 @@ task:
   ccache_cache:
     folder: "/tmp/ccache_dir"
   install_script:
-    - apk --no-cache --update add autoconf automake g++ gcc git libtool linux-headers make pkgconfig python3 boost libevent zeromq qt5-qtbase-dev qt5-qttools-dev ccache
+    - apk --no-cache --update add autoconf automake g++ gcc git libtool make pkgconfig python3 boost-dev libevent-dev zeromq-dev qt5-qtbase-dev qt5-qttools-dev ccache
     - ccache --max-size=${CCACHE_SIZE}
   upstream_clone_script:
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core

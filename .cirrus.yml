@@ -84,6 +84,7 @@ task:
     memory: 8G
   timeout_in: 60m
   env:
+    LC_ALL: "C"
     MAKEJOBS: "-j9"
     DANGER_RUN_CI_ON_HOST: "1"
     CCACHE_SIZE: "200M"

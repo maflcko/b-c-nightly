@@ -168,6 +168,29 @@ task:
     - cd bitcoin-core
     - ./ci/test_run_all.sh
 task:
+  name: "x86_64 Linux  [focal]  [system libs, no depends, fuzz, enable debug]"
+  container:
+    image: ubuntu:20.04
+    cpu: 8
+    memory: 8G
+  timeout_in: 60m
+  env:
+    FILE_ENV: "./ci/test/00_setup_env_native_fuzz_enable_debug.sh"
+    MAKEJOBS: "-j9"
+    DANGER_RUN_CI_ON_HOST: "1"
+    CCACHE_SIZE: "200M"
+    CCACHE_DIR: "/tmp/ccache_dir"
+  ccache_cache:
+    folder: "/tmp/ccache_dir"
+  upstream_clone_script:
+    - apt update && apt install git -y
+    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
+    - cd bitcoin-core
+    - mv ../00_setup_env_native_fuzz_enable_debug.sh ./ci/test/
+  ci_script:
+    - cd bitcoin-core
+    - ./ci/test_run_all.sh
+task:
   name: "x86_64 Linux  [focal]  [system libs, no depends, fuzz, valgrind]"
   container:
     image: ubuntu:20.04

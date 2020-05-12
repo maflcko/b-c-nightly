@@ -187,6 +187,4 @@ task:
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
   ci_script:
     - cd bitcoin-core
-    - sed -i -e "s/\-\-par',/--par', '-j',/g" ./test/fuzz/test_runner.py
-    - sed -i -e 's/FUZZ_TESTS_CONFIG}/FUZZ_TESTS_CONFIG} $MAKEJOBS /g' ./ci/test/06_script_b.sh  # Temporary FIXME
     - ./ci/test_run_all.sh

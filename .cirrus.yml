@@ -236,7 +236,7 @@ task:
     - cd bitcoin-core
     - ./ci/test_run_all.sh
 task:
-  name: "x86_64 Linux  [Alpine]  [system libs, no depends, fuzz]"
+  name: "x86_64 Linux  [Alpine]  [system libs, no depends, fuzz, valgrind]"
   container:
     image: alpine:latest
     cpu: 8
@@ -251,7 +251,7 @@ task:
   ccache_cache:
     folder: "/tmp/ccache_dir"
   install_script:
-    - apk --no-cache --update add autoconf automake g++ gcc git libtool make pkgconfig python3 boost-dev libevent-dev zeromq-dev qt5-qtbase-dev qt5-qttools-dev ccache clang
+    - apk --no-cache --update add autoconf automake g++ gcc git libtool make pkgconfig python3 boost-dev libevent-dev zeromq-dev qt5-qtbase-dev qt5-qttools-dev ccache clang valgrind
     - ccache --max-size=${CCACHE_SIZE}
   upstream_clone_script:
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
@@ -259,13 +259,13 @@ task:
   configure_script:
     - cd bitcoin-core
     - ./autogen.sh
-    - ./configure --enable-c++17 --enable-fuzz --with-sanitizers=address,fuzzer,undefined CC=clang CXX=clang++ || ( cat config.log && false)
+    - ./configure --enable-c++17 --enable-fuzz --with-sanitizers=fuzzer CC=clang CXX=clang++ || ( cat config.log && false)
   make_script:
     - cd bitcoin-core
     - make ${MAKEJOBS} || ( echo "Build failure. Verbose build follows." && make V=1 ; false )
   fuzz_test_script:
     - cd bitcoin-core
-    - ./test/fuzz/test_runner.py $MAKEJOBS ../qa-assets/fuzz_seed_corpus
+    - ./test/fuzz/test_runner.py $MAKEJOBS ../qa-assets/fuzz_seed_corpus --valgrind
 task:
   name: "x86_64 Linux  [focal]  [system libs, no depends, fuzz, enable debug]"
   container:

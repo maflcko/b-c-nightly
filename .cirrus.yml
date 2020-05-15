@@ -76,7 +76,7 @@ task:
     - make check ${MAKEJOBS} VERBOSE=1
   functional_test_script:
     - cd bitcoin-core
-    - ./test/functional/test_runner.py --exclude wallet_avoidreuse $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --factor=3  # Temporary exclude wallet_avoidreuse FIXME
+    - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --factor=3
 task:
   name: "x86_64 Linux  [Xenial]  [system libs, no depends, clang]"
   container:

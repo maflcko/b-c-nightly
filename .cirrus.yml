@@ -70,14 +70,13 @@ task:
     - ./configure || ( cat config.log && false)
   make_script:
     - cd bitcoin-core
-    - sed -i -e 's/height.emplace/height = int/g' src/wallet/rpcwallet.cpp  # Temporary FIXME
     - make ${MAKEJOBS} ${GOAL} || ( echo "Build failure. Verbose build follows." && make ${GOAL} V=1 ; false )
   check_script:
     - cd bitcoin-core
     - make check ${MAKEJOBS} VERBOSE=1
   functional_test_script:
-    - cd bitcoin-core  # Temporary exclude wallet_avoidreuse FIXME
-    - ./test/functional/test_runner.py --exclude wallet_avoidreuse $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --factor=3
+    - cd bitcoin-core
+    - ./test/functional/test_runner.py --exclude wallet_avoidreuse $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --factor=3  # Temporary exclude wallet_avoidreuse FIXME
 task:
   name: "x86_64 Linux  [Xenial]  [system libs, no depends, clang]"
   container:

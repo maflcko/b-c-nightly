@@ -42,7 +42,7 @@ task:
   functional_test_script:
     - cd bitcoin-core
     - sed -i -e 's/wait=5, timeout=300/wait=5, timeout=3000/g' $(git grep -l 'timeout=' test)  # Temporary FIXME
-    - eatmydata ./test/functional/test_runner.py $MAKEJOBS --ci --extended --exclude feature_dbcrash,p2p_timeouts --combinedlogslen=1000 --quiet --failfast --factor=10
+    - eatmydata ./test/functional/test_runner.py $MAKEJOBS --ci --extended --exclude feature_dbcrash,p2p_timeouts --combinedlogslen=1000 --quiet --failfast --timeout-factor=10
 task:
   name: "x86_64 Linux  [CentOS 7]  [system libs, no depends]"
   container:
@@ -76,7 +76,7 @@ task:
     - make check ${MAKEJOBS} VERBOSE=1
   functional_test_script:
     - cd bitcoin-core
-    - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --factor=3
+    - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
 task:
   name: "x86_64 Linux  [Xenial]  [system libs, no depends, clang]"
   container:
@@ -110,7 +110,7 @@ task:
     - make check ${MAKEJOBS} VERBOSE=1
   functional_test_script:
     - cd bitcoin-core
-    - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --factor=3
+    - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
 task:
   name: "x86_64 Linux  [Xenial]  [system libs, no depends, gcc]"
   container:
@@ -144,7 +144,7 @@ task:
     - make check ${MAKEJOBS} VERBOSE=1
   functional_test_script:
     - cd bitcoin-core
-    - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --factor=3
+    - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
 task:
   name: "x86_64 Linux  [Alpine]  [system libs, no depends]"
   container:
@@ -178,7 +178,7 @@ task:
     - make check ${MAKEJOBS} VERBOSE=1
   functional_test_script:
     - cd bitcoin-core
-    - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --factor=3
+    - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
 task:
   name: "x86_64 Linux  [Arch]  [system libs, no depends]"
   container:
@@ -211,7 +211,7 @@ task:
     - make check ${MAKEJOBS} VERBOSE=1
   functional_test_script:
     - cd bitcoin-core
-    - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --factor=3
+    - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
 task:
   name: "x86_64 Linux  [bionic]  [system libs, no depends, valgrind]"
   container:

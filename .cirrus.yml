@@ -251,8 +251,13 @@ task:
     folder: "/tmp/ccache_dir"
   upstream_clone_script:
     - apt update && apt install git -y
-    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
+    #- git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
+    - git clone https://github.com/bitcoin/bitcoin            ./bitcoin-core
     - cd bitcoin-core
+    - git config --global user.email "you@example.com"
+    - git config --global user.name "Your Name"
+    - git fetch https://github.com/hebasto/bitcoin/ pr18881.15
+    - git merge 26c093a9957756f3743c2347fe0abd90f81159c4
     - mv ../00_setup_env_native_fuzz_enable_debug.sh ./ci/test/
   ci_script:
     - cd bitcoin-core

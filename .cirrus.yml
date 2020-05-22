@@ -231,6 +231,8 @@ task:
   upstream_clone_script:
     - apt update && apt install git -y
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
+    - cd bitcoin-core
+    - sed -i -e 's/--factor=/--timeout-factor=/g' ci/test/00_setup_env_native_valgrind.sh
   ci_script:
     - cd bitcoin-core
     - ./ci/test_run_all.sh

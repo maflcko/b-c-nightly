@@ -268,6 +268,29 @@ task:
     - cd bitcoin-core
     - ./autogen.sh && ./configure --prefix=$PWD/depends/aarch64-linux-android
 task:
+  name: "x86_64 Linux  [fedora]  [system libs, no depends, tsan]"
+  container:
+    image: fedora:33
+    cpu: 8
+    memory: 8G
+  timeout_in: 60m
+  env:
+    CCACHE_SIZE: "200M"
+    CCACHE_DIR: "/tmp/ccache_dir"
+  ccache_cache:
+    folder: "/tmp/ccache_dir"
+  upstream_clone_script:
+    - dnf install git -y
+    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
+  install_pkgs_script:
+    - dnf install gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb-cxx-devel python3 clang qt5-qttools-devel qt5-qtbase-devel -y
+  ci_script:
+    - cd bitcoin-core
+    - ./autogen.sh && ./configure --with-sanitizers=thread --with-incompatible-bdb CC=clang CXX=clang++
+    - make -j 9
+  tsan_test_script:
+    - echo TODO
+task:
   name: "x86_64 Linux  [focal]  [system libs, no depends, fuzz, enable debug]"
   container:
     image: ubuntu:20.04

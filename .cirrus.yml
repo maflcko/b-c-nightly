@@ -261,7 +261,7 @@ task:
     - wget https://dl.google.com/android/repository/commandlinetools-linux-6514223_latest.zip
     - unzip commandlinetools-linux-6514223_latest.zip
     - mv tools $ANDROID_HOME/
-    - $ANDROID_HOME/tools/bin/sdkmanager --sdk_root=$ANDROID_HOME "platform-tools" "platforms;android-28" "ndk-bundle"
+    - yes | $ANDROID_HOME/tools/bin/sdkmanager --sdk_root=$ANDROID_HOME "platform-tools" "platforms;android-28" "ndk-bundle"
     - cd depends
     - ANDROID_SDK=$ANDROID_HOME ANDROID_NDK=$ANDROID_HOME/ndk-bundle make HOST=aarch64-linux-android ANDROID_API_LEVEL=28 ANDROID_TOOLCHAIN_BIN=$ANDROID_HOME/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin -j 9 NO_QT=1
   android_build_script:

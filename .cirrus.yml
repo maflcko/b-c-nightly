@@ -247,6 +247,7 @@ task:
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
     ANDROID_HOME: "~/Android/Sdk"
+    DEBIAN_FRONTEND: "noninteractive"
   ccache_cache:
     folder: "/tmp/ccache_dir"
   depends_built_cache:

@@ -257,8 +257,63 @@ task:
     - cd bitcoin-core
     - ./autogen.sh && ./configure --with-sanitizers=thread --with-incompatible-bdb CC=clang CXX=clang++
     - make -j 9
+  san_test_script:
+    - export LSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/lsan"
+    - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
+    - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
+    - echo TODO
+task:
+  name: "x86_64 Linux  [fedora]  [system libs, no depends, asan]"
+  container:
+    image: fedora:33
+    cpu: 8
+    memory: 8G
+  timeout_in: 60m
+  env:
+    CCACHE_SIZE: "200M"
+    CCACHE_DIR: "/tmp/ccache_dir"
+  ccache_cache:
+    folder: "/tmp/ccache_dir"
+  upstream_clone_script:
+    - dnf install git -y
+    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
+  install_pkgs_script:
+    - dnf install gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb-cxx-devel python3 clang qt5-qttools-devel qt5-qtbase-devel -y
+  ci_script:
+    - cd bitcoin-core
+    - ./autogen.sh && ./configure --with-sanitizers=address,integer,undefined --with-incompatible-bdb CC=clang CXX=clang++
+    - make -j 9
+  san_test_script:
+    - export LSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/lsan"
+    - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
+    - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
+    #- make -j 9 check
+    #- ./test/functional/test_runner.py -j 9
+task:
+  name: "x86_64 Linux  [fedora]  [system libs, no depends, fuzz, tsan]"
+  container:
+    image: fedora:33
+    cpu: 8
+    memory: 8G
+  timeout_in: 60m
+  env:
+    CCACHE_SIZE: "200M"
+    CCACHE_DIR: "/tmp/ccache_dir"
+  ccache_cache:
+    folder: "/tmp/ccache_dir"
+  upstream_clone_script:
+    - dnf install git -y
+    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
+    - git clone https://github.com/bitcoin-core/qa-assets --depth=1
+  install_pkgs_script:
+    - dnf install gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb-cxx-devel python3 clang qt5-qttools-devel qt5-qtbase-devel -y
+  ci_script:
+    - cd bitcoin-core
+    - ./autogen.sh && ./configure --with-sanitizers=fuzzer,thread --enable-fuzz --enble-c++17 --with-incompatible-bdb CC=clang CXX=clang++
+    - make -j 9
   tsan_test_script:
     - echo TODO
+    #- ./test/fuzz/test_runner.py -j 9 -l DEBUG ../qa-assets/fuzz_seed_corpus/
 task:
   name: "x86_64 Linux  [focal]  [system libs, no depends, fuzz, enable debug]"
   container:

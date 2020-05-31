@@ -237,38 +237,6 @@ task:
     - cd bitcoin-core
     - ./ci/test_run_all.sh
 task:
-  name: "x86_64 Linux  [focal]  [Android depends]"
-  container:
-    image: ubuntu:20.04
-    cpu: 8
-    memory: 8G
-  timeout_in: 60m
-  env:
-    CCACHE_SIZE: "200M"
-    CCACHE_DIR: "/tmp/ccache_dir"
-    ANDROID_HOME: "~/Android/Sdk"
-    DEBIAN_FRONTEND: "noninteractive"
-  ccache_cache:
-    folder: "/tmp/ccache_dir"
-  depends_built_cache:
-    folder: "/tmp/cirrus-ci-build/bitcoin-core/depends/built"
-  upstream_clone_script:
-    - apt update && apt install git -y
-    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
-  depends_build_script:
-    - cd bitcoin-core
-    - apt update && apt install curl wget htop git ccache build-essential libtool autotools-dev automake pkg-config bsdmainutils python3-zmq unzip default-jdk clang -y
-    - mkdir -p $ANDROID_HOME
-    - wget https://dl.google.com/android/repository/commandlinetools-linux-6514223_latest.zip
-    - unzip commandlinetools-linux-6514223_latest.zip
-    - mv tools $ANDROID_HOME/
-    - yes | $ANDROID_HOME/tools/bin/sdkmanager --sdk_root=$ANDROID_HOME "platform-tools" "platforms;android-28" "ndk-bundle"
-    - cd depends
-    - ANDROID_SDK=$ANDROID_HOME ANDROID_NDK=$ANDROID_HOME/ndk-bundle make HOST=aarch64-linux-android ANDROID_API_LEVEL=28 ANDROID_TOOLCHAIN_BIN=$ANDROID_HOME/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin -j 9 NO_QT=1
-  android_build_script:
-    - cd bitcoin-core
-    - ./autogen.sh && ./configure --prefix=$PWD/depends/aarch64-linux-android
-task:
   name: "x86_64 Linux  [fedora]  [system libs, no depends, tsan]"
   container:
     image: fedora:33

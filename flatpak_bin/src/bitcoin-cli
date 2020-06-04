@@ -9,4 +9,4 @@ args += sys.argv[1:]
 args = shlex.join(args)
 args = ['flatpak', 'run', '--command=sh', 'org.bitcoincore.bitcoin-qt', '-c', args]
 
-subprocess.run(args, check=True)
+sys.exit(subprocess.run(args).returncode)

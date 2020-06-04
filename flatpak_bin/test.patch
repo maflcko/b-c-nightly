@@ -1,7 +1,0 @@
-diff --git a/test/functional/test_runner.py b/test/functional/test_runner.py
-index 1517407700..97935e3606 100755
---- a/test/functional/test_runner.py
-+++ b/test/functional/test_runner.py
-@@ -308 +308 @@ def main():
--    tmpdir = "%s/test_runner_₿_🏃_%s" % (args.tmpdirprefix, datetime.datetime.now().strftime("%Y%m%d_%H%M%S"))
-+    tmpdir = "%s/test_runner_%s" % (args.tmpdirprefix, datetime.datetime.now().strftime("%Y%m%d_%H%M%S"))

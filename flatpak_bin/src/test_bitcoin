@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-flatpak run --command=sh  org.bitcoincore.bitcoin-qt  -c "/app/bin/internal/test_bitcoin ${@}"
+flatpak run --command=sh  org.bitcoincore.bitcoin-qt  -c "/app/bin/internal/test_bitcoin $*"  # $* breaks when an argument has a space, see https://stackoverflow.com/a/46205560/2084795

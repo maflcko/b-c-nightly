@@ -16,7 +16,7 @@ args = parser.parse_args()
 def main():
     root_folder = os.path.abspath(os.path.dirname(__file__))
     src_dir = os.path.normpath(args.srcdir.replace('/c/Users/', 'C:\\Users\\'))
-    build_dir = os.path.normpath(args.build_dir.replace('/c/Users/', 'C:\\Users\\'))
+    build_dir = os.path.normpath(args.builddir.replace('/c/Users/', 'C:\\Users\\'))
 
     print(os.getenv('PYTHONIOENCODING'))
     print(sys.stdin.encoding)

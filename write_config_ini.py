@@ -24,7 +24,6 @@ def main():
     assert 'UTF-8'.lower() == sys.stdin.encoding.lower() == sys.stdout.encoding.lower()
     print(src_dir)
     assert os.path.isdir(src_dir)  # Make sure to git clone bitcoin-core
-    import zmq  #noqa
 
     config_file = os.path.join(src_dir, 'test', 'config.ini')
     shutil.copyfile(os.path.join(root_folder, 'config.ini'), config_file)

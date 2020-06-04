@@ -1,3 +1,12 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python3
 
-flatpak run --command=sh  org.bitcoincore.bitcoin-qt  -c "/app/bin/internal/test_bitcoin $*"  # $* breaks when an argument has a space, see https://stackoverflow.com/a/46205560/2084795
+import shlex
+import subprocess
+import sys
+
+args = ['/app/bin/internal/test_bitcoin']
+args += sys.argv[1:]
+args = shlex.join(args)
+args = ['flatpak', 'run', '--command=sh', 'org.bitcoincore.bitcoin-qt', '-c', args]
+
+subprocess.run(args, check=True)

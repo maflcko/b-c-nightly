@@ -69,15 +69,19 @@ jobs:
     - powershell "${PYTHON} ./test/functional/test_runner.py wallet_disable wallet_multiwallet"
 
  - os: linux
+   language: python
+   python: '3.8'
    dist: bionic
    arch: arm64
    env: >-
+    SHASUM="shasum -a 256"
     TEST_RUNNER_EXTRA=""
    install:
-    - sudo apt update && sudo apt install flatpak ca-certificates python3-zmq -y
+    - sudo apt update && sudo apt install flatpak ca-certificates -y
     - flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo --user
     - flatpak install flathub org.bitcoincore.bitcoin-qt -y --user
     - flatpak override org.bitcoincore.bitcoin-qt --filesystem=/tmp/ --user
+    - flatpak override org.bitcoincore.bitcoin-qt --filesystem=$PWD --user
    before_script:
     - git clone https://github.com/bitcoin/bitcoin.git ./bitcoin-core-nightly
     - cd bitcoin-core-nightly
@@ -92,23 +96,23 @@ jobs:
     - ${BUILDDIR}/src/test_bitcoin
     - cd ${SRCDIR}
     - git checkout $VERSION
+    - patch -p 1 < ${BUILDDIR}/test.patch
     - ${SRCDIR}/test/functional/test_runner.py ${TEST_RUNNER_EXTRA}
-   after_script:
-    - cd ${SRCDIR}
-    - git log -1
-    - cd ${BUILDDIR}
-    - sha256sum ./src/*
 
  - os: linux
+   language: python
+   python: '3.8'
    dist: bionic
    arch: amd64
    env: >-
+    SHASUM="shasum -a 256"
     TEST_RUNNER_EXTRA=""
    install:
-    - sudo apt update && sudo apt install flatpak ca-certificates python3-zmq -y
+    - sudo apt update && sudo apt install flatpak ca-certificates -y
     - flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo --user
     - flatpak install flathub org.bitcoincore.bitcoin-qt -y --user
     - flatpak override org.bitcoincore.bitcoin-qt --filesystem=/tmp/ --user
+    - flatpak override org.bitcoincore.bitcoin-qt --filesystem=$PWD --user
    before_script:
     - git clone https://github.com/bitcoin/bitcoin.git ./bitcoin-core-nightly
     - cd bitcoin-core-nightly
@@ -123,9 +127,5 @@ jobs:
     - ${BUILDDIR}/src/test_bitcoin
     - cd ${SRCDIR}
     - git checkout $VERSION
+    - patch -p 1 < ${BUILDDIR}/test.patch
     - ${SRCDIR}/test/functional/test_runner.py ${TEST_RUNNER_EXTRA}
-   after_script:
-    - cd ${SRCDIR}
-    - git log -1
-    - cd ${BUILDDIR}
-    - sha256sum ./src/*

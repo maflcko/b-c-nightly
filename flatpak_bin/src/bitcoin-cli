@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+flatpak run --command=sh  org.bitcoincore.bitcoin-qt  -c "bitcoin-cli ${@}"

@@ -2,11 +2,11 @@ task:
   name: "x86_64 FreeBsd 12.1 [system libs, no depends]"
   freebsd_instance:
     image_family: freebsd-12-1  # https://cirrus-ci.org/guide/FreeBSD/
-    cpu: 8
-    memory: 8G
-  timeout_in: 60m
+    cpu: 2
+    memory: 6G
+  timeout_in: 120m
   env:
-    MAKEJOBS: "-j9"
+    MAKEJOBS: "-j4"
     CONFIGURE_OPTS: "--disable-dependency-tracking"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"
@@ -46,11 +46,11 @@ task:
   name: "x86_64 Linux  [CentOS 8]  [system libs, no depends]"
   container:
     image: centos:8
-    cpu: 8
-    memory: 8G
-  timeout_in: 60m
+    cpu: 2
+    memory: 6G
+  timeout_in: 120m
   env:
-    MAKEJOBS: "-j9"
+    MAKEJOBS: "-j4"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -80,11 +80,11 @@ task:
   name: "x86_64 Linux  [debian:experimental]  [system libs, no depends, clang]"
   container:
     image: debian:experimental
-    cpu: 8
-    memory: 8G
-  timeout_in: 60m
+    cpu: 2
+    memory: 6G
+  timeout_in: 120m
   env:
-    MAKEJOBS: "-j9"
+    MAKEJOBS: "-j4"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -112,11 +112,11 @@ task:
   name: "x86_64 Linux  [debian:experimental]  [system libs, no depends, gcc]"
   container:
     image: debian:experimental
-    cpu: 8
-    memory: 8G
-  timeout_in: 60m
+    cpu: 2
+    memory: 6G
+  timeout_in: 120m
   env:
-    MAKEJOBS: "-j9"
+    MAKEJOBS: "-j4"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -144,12 +144,12 @@ task:
   name: "x86_64 Linux  [Xenial]  [system libs, no depends, clang]"
   container:
     image: ubuntu:xenial
-    cpu: 8
-    memory: 8G
-  timeout_in: 60m
+    cpu: 2
+    memory: 6G
+  timeout_in: 120m
   env:
     LC_ALL: "C.UTF-8"
-    MAKEJOBS: "-j9"
+    MAKEJOBS: "-j4"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -177,12 +177,12 @@ task:
   name: "x86_64 Linux  [Xenial]  [system libs, no depends, gcc]"
   container:
     image: ubuntu:xenial
-    cpu: 8
-    memory: 8G
-  timeout_in: 60m
+    cpu: 2
+    memory: 6G
+  timeout_in: 120m
   env:
     LC_ALL: "C.UTF-8"
-    MAKEJOBS: "-j9"
+    MAKEJOBS: "-j4"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -210,12 +210,12 @@ task:
   name: "x86_64 Linux  [Alpine]  [system libs, no depends]"
   container:
     image: alpine:latest
-    cpu: 8
-    memory: 8G
-  timeout_in: 60m
+    cpu: 2
+    memory: 6G
+  timeout_in: 120m
   env:
     LC_ALL: "C"
-    MAKEJOBS: "-j9"
+    MAKEJOBS: "-j4"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -243,11 +243,11 @@ task:
   name: "x86_64 Linux  [Arch]  [system libs, no depends]"
   container:
     image: archlinux:latest
-    cpu: 8
-    memory: 8G
-  timeout_in: 60m
+    cpu: 2
+    memory: 6G
+  timeout_in: 120m
   env:
-    MAKEJOBS: "-j9"
+    MAKEJOBS: "-j4"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -275,12 +275,12 @@ task:
   name: "x86_64 Linux  [bionic]  [system libs, no depends, valgrind]"
   container:
     image: ubuntu:18.04  # valgrind supp is for bionic
-    cpu: 8
-    memory: 8G
+    cpu: 2
+    memory: 6G
   timeout_in: 120
   env:
     FILE_ENV: "./ci/test/00_setup_env_native_valgrind.sh"
-    MAKEJOBS: "-j8"
+    MAKEJOBS: "-j4"
     DANGER_RUN_CI_ON_HOST: "1"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"
@@ -298,9 +298,9 @@ task:
   name: "x86_64 Linux  [fedora]  [system libs, no depends, tsan]"
   container:
     image: fedora:33
-    cpu: 8
-    memory: 8G
-  timeout_in: 60m
+    cpu: 2
+    memory: 6G
+  timeout_in: 120m
   env:
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -314,7 +314,7 @@ task:
   ci_script:
     - cd bitcoin-core
     - ./autogen.sh && ./configure --with-sanitizers=thread --with-incompatible-bdb CC=clang CXX=clang++
-    - make -j 9
+    - make -j 4
   san_test_script:
     - export LSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/lsan"
     - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
@@ -324,9 +324,9 @@ task:
   name: "x86_64 Linux  [fedora]  [system libs, no depends, asan]"
   container:
     image: fedora:33
-    cpu: 8
-    memory: 8G
-  timeout_in: 60m
+    cpu: 2
+    memory: 6G
+  timeout_in: 120m
   env:
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -340,20 +340,20 @@ task:
   ci_script:
     - cd bitcoin-core
     - ./autogen.sh && ./configure --with-sanitizers=address,integer,undefined --with-incompatible-bdb CC=clang CXX=clang++
-    - make -j 9
+    - make -j 4
   san_test_script:
     - export LSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/lsan"
     - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
     - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
-    #- make -j 9 check
-    #- ./test/functional/test_runner.py -j 9
+    #- make -j 4 check
+    #- ./test/functional/test_runner.py -j 4
 task:
   name: "x86_64 Linux  [fedora]  [system libs, no depends, fuzz, tsan]"
   container:
     image: fedora:33
-    cpu: 8
-    memory: 8G
-  timeout_in: 60m
+    cpu: 2
+    memory: 6G
+  timeout_in: 120m
   env:
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -368,17 +368,17 @@ task:
   ci_script:
     - cd bitcoin-core
     - ./autogen.sh && ./configure --with-sanitizers=fuzzer,address,integer,undefined --enable-fuzz --enable-c++17 --with-incompatible-bdb CC=clang CXX=clang++
-    - make -j 9
+    - make -j 4
   tsan_test_script:
     - echo TODO
-    #- ./test/fuzz/test_runner.py -j 9 -l DEBUG ../qa-assets/fuzz_seed_corpus/
+    #- ./test/fuzz/test_runner.py -j 4 -l DEBUG ../qa-assets/fuzz_seed_corpus/
 task:
   name: "x86_64 Linux  [fedora]  [system libs, no depends, fuzz, asan]"
   container:
     image: fedora:33
-    cpu: 8
-    memory: 8G
-  timeout_in: 60m
+    cpu: 2
+    memory: 6G
+  timeout_in: 120m
   env:
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -393,20 +393,20 @@ task:
   ci_script:
     - cd bitcoin-core
     - ./autogen.sh && ./configure --with-sanitizers=fuzzer,thread --enable-fuzz --enable-c++17 --with-incompatible-bdb CC=clang CXX=clang++
-    - make -j 9
+    - make -j 4
   tsan_test_script:
     - echo TODO
-    #- ./test/fuzz/test_runner.py -j 9 -l DEBUG ../qa-assets/fuzz_seed_corpus/
+    #- ./test/fuzz/test_runner.py -j 4 -l DEBUG ../qa-assets/fuzz_seed_corpus/
 task:
   name: "x86_64 Linux  [focal]  [system libs, no depends, fuzz, enable debug]"
   container:
     image: ubuntu:20.04
-    cpu: 8
-    memory: 8G
-  timeout_in: 60m
+    cpu: 2
+    memory: 6G
+  timeout_in: 120m
   env:
     FILE_ENV: "./ci/test/00_setup_env_native_fuzz_enable_debug.sh"
-    MAKEJOBS: "-j9"
+    MAKEJOBS: "-j4"
     DANGER_RUN_CI_ON_HOST: "1"
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"

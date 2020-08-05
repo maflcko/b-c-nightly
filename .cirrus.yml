@@ -8,7 +8,6 @@ task:
   env:
     MAKEJOBS: "-j9"
     CONFIGURE_OPTS: "--disable-dependency-tracking"
-    GOAL: "install"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"
     CCACHE_COMPRESS: 1
@@ -35,7 +34,7 @@ task:
     - ./configure ${CONFIGURE_OPTS} BDB_LIBS="-L$(pwd)/db4/lib -ldb_cxx-4.8" BDB_CFLAGS="-I$(pwd)/db4/include" || ( cat config.log && false)
   make_script:
     - cd bitcoin-core
-    - gmake ${MAKEJOBS} ${GOAL} || ( echo "Build failure. Verbose build follows." && gmake ${GOAL} V=1 ; false )
+    - gmake ${MAKEJOBS} || ( echo "Build failure. Verbose build follows." && gmake V=1 ; false )
   check_script:
     - cd bitcoin-core
     - gmake check ${MAKEJOBS} VERBOSE=1
@@ -69,7 +68,7 @@ task:
     - ./configure --disable-wallet || ( cat config.log && false)  # wallet, upnp and qrencode disabled for now
   make_script:
     - cd bitcoin-core
-    - make ${MAKEJOBS} ${GOAL} || ( echo "Build failure. Verbose build follows." && make ${GOAL} V=1 ; false )
+    - make ${MAKEJOBS} || ( echo "Build failure. Verbose build follows." && make V=1 ; false )
   check_script:
     - cd bitcoin-core
     - make check ${MAKEJOBS} VERBOSE=1
@@ -166,7 +165,7 @@ task:
     - ./configure --with-incompatible-bdb CC=clang CXX=clang++ || ( cat config.log && false)
   make_script:
     - cd bitcoin-core
-    - make ${MAKEJOBS} ${GOAL} || ( echo "Build failure. Verbose build follows." && make ${GOAL} V=1 ; false )
+    - make ${MAKEJOBS} || ( echo "Build failure. Verbose build follows." && make V=1 ; false )
   check_script:
     - cd bitcoin-core
     - make check ${MAKEJOBS} VERBOSE=1
@@ -199,7 +198,7 @@ task:
     - ./configure --with-incompatible-bdb || ( cat config.log && false)
   make_script:
     - cd bitcoin-core
-    - make ${MAKEJOBS} ${GOAL} || ( echo "Build failure. Verbose build follows." && make ${GOAL} V=1 ; false )
+    - make ${MAKEJOBS} || ( echo "Build failure. Verbose build follows." && make V=1 ; false )
   check_script:
     - cd bitcoin-core
     - make check ${MAKEJOBS} VERBOSE=1
@@ -232,7 +231,7 @@ task:
     - ./configure --disable-wallet || ( cat config.log && false)
   make_script:
     - cd bitcoin-core
-    - make ${MAKEJOBS} ${GOAL} || ( echo "Build failure. Verbose build follows." && make ${GOAL} V=1 ; false )
+    - make ${MAKEJOBS} || ( echo "Build failure. Verbose build follows." && make V=1 ; false )
   check_script:
     - cd bitcoin-core
     - make check ${MAKEJOBS} VERBOSE=1
@@ -264,7 +263,7 @@ task:
     - ./configure --disable-wallet || ( cat config.log && false)
   make_script:
     - cd bitcoin-core
-    - make ${MAKEJOBS} ${GOAL} || ( echo "Build failure. Verbose build follows." && make ${GOAL} V=1 ; false )
+    - make ${MAKEJOBS} || ( echo "Build failure. Verbose build follows." && make V=1 ; false )
   check_script:
     - cd bitcoin-core
     - make check ${MAKEJOBS} VERBOSE=1

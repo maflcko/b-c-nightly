@@ -289,8 +289,12 @@ task:
     folder: "/tmp/ccache_dir"
   upstream_clone_script:
     - apt update && apt install git -y
-    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
+    - git clone https://github.com/bitcoin/bitcoin ./bitcoin-core
     - cd bitcoin-core
+    - git fetch https://github.com/MarcoFalke/bitcoin-core/ 2008-valSupp
+    - git config --global user.email "you@example.com"
+    - git config --global user.name "Your Name"
+    - git merge FETCH_HEAD
   ci_script:
     - cd bitcoin-core
     - ./ci/test_run_all.sh

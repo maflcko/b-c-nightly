@@ -43,39 +43,39 @@ task:
     - cd bitcoin-core
     - sed -i -e 's/wait=5, timeout=300/wait=5, timeout=3000/g' $(git grep -l 'timeout=' test)  # Temporary FIXME
     - eatmydata ./test/functional/test_runner.py $MAKEJOBS --ci --extended --exclude feature_dbcrash,p2p_timeouts --combinedlogslen=1000 --quiet --failfast --timeout-factor=10
-#task:
-#  name: "x86_64 Linux  [CentOS 7]  [system libs, no depends]"
-#  container:
-#    image: centos:7
-#    cpu: 8
-#    memory: 8G
-#  timeout_in: 60m
-#  env:
-#    MAKEJOBS: "-j9"
-#    TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
-#    CCACHE_SIZE: "200M"
-#    CCACHE_DIR: "/tmp/ccache_dir"
-#  ccache_cache:
-#    folder: "/tmp/ccache_dir"
-#  install_script:
-#    - yum -y install epel-release
-#    - yum install -y ccache gcc-c++ libtool make git python3 python36-zmq boost-devel libevent-devel libdb4-devel libdb4-cxx-devel miniupnpc-devel zeromq-devel qt5-qtbase-devel qt5-qttools-devel qrencode-devel
-#    - ccache --max-size=${CCACHE_SIZE}
-#  upstream_clone_script:
-#    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
-#  configure_script:
-#    - cd bitcoin-core
-#    - ./autogen.sh
-#    - ./configure || ( cat config.log && false)
-#  make_script:
-#    - cd bitcoin-core
-#    - make ${MAKEJOBS} ${GOAL} || ( echo "Build failure. Verbose build follows." && make ${GOAL} V=1 ; false )
-#  check_script:
-#    - cd bitcoin-core
-#    - make check ${MAKEJOBS} VERBOSE=1
-#  functional_test_script:
-#    - cd bitcoin-core
-#    - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
+task:
+  name: "x86_64 Linux  [CentOS 8]  [system libs, no depends]"
+  container:
+    image: centos:8
+    cpu: 8
+    memory: 8G
+  timeout_in: 60m
+  env:
+    MAKEJOBS: "-j9"
+    TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
+    CCACHE_SIZE: "200M"
+    CCACHE_DIR: "/tmp/ccache_dir"
+  ccache_cache:
+    folder: "/tmp/ccache_dir"
+  install_script:
+    - dnf -y install epel-release
+    - dnf install -y ccache gcc-c++ libtool make git python3 python3-zmq boost-devel libevent-devel libdb-devel zeromq-devel qt5-qtbase-devel qt5-qttools-devel qrencode
+    - ccache --max-size=${CCACHE_SIZE}
+  upstream_clone_script:
+    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
+  configure_script:
+    - cd bitcoin-core
+    - ./autogen.sh
+    - ./configure --disable-wallet || ( cat config.log && false)  # wallet, upnp and qrencode disabled for now
+  make_script:
+    - cd bitcoin-core
+    - make ${MAKEJOBS} ${GOAL} || ( echo "Build failure. Verbose build follows." && make ${GOAL} V=1 ; false )
+  check_script:
+    - cd bitcoin-core
+    - make check ${MAKEJOBS} VERBOSE=1
+  functional_test_script:
+    - cd bitcoin-core
+    - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
 task:
   name: "x86_64 Linux  [debian:experimental]  [system libs, no depends, clang]"
   container:

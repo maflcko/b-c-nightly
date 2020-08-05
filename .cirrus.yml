@@ -57,15 +57,16 @@ task:
   ccache_cache:
     folder: "/tmp/ccache_dir"
   install_script:
-    - dnf -y install epel-release
-    - dnf install -y ccache gcc-c++ libtool make git python3 python3-zmq boost-devel libevent-devel libdb-devel zeromq-devel qt5-qtbase-devel qt5-qttools-devel qrencode
+    - dnf -y install epel-release dnf-plugin*
+    - dnf config-manager --set-enabled PowerTools
+    - dnf install -y ccache gcc-c++ libtool make git python3 python3-zmq boost-devel libevent-devel libdb-cxx-devel zeromq-devel qt5-qtbase-devel qt5-qttools-devel qrencode-devel  # upnp disabled for now
     - ccache --max-size=${CCACHE_SIZE}
   upstream_clone_script:
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
   configure_script:
     - cd bitcoin-core
     - ./autogen.sh
-    - ./configure --disable-wallet || ( cat config.log && false)  # wallet, upnp and qrencode disabled for now
+    - ./configure --with-incompatible-bdb || ( cat config.log && false)
   make_script:
     - cd bitcoin-core
     - make ${MAKEJOBS} || ( echo "Build failure. Verbose build follows." && make V=1 ; false )

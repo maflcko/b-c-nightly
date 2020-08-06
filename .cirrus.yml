@@ -276,7 +276,7 @@ task:
   container:
     image: ubuntu:18.04  # valgrind supp is for bionic
     cpu: 2
-    memory: 6G
+    memory: 8G
   timeout_in: 120
   env:
     FILE_ENV: "./ci/test/00_setup_env_native_valgrind.sh"

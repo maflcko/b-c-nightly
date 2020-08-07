@@ -275,7 +275,7 @@ task:
   name: "x86_64 Linux  [bionic]  [system libs, no depends, valgrind]"
   container:
     image: ubuntu:18.04  # valgrind supp is for bionic
-    cpu: 2
+    cpu: 4
     memory: 8G
   timeout_in: 120
   env:

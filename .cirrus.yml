@@ -276,11 +276,11 @@ task:
   container:
     image: ubuntu:18.04  # valgrind supp is for bionic
     cpu: 4
-    memory: 8G
+    memory: 12G
   timeout_in: 120
   env:
     FILE_ENV: "./ci/test/00_setup_env_native_valgrind.sh"
-    MAKEJOBS: "-j3"
+    MAKEJOBS: "-j3"  # Avoid OOM
     DANGER_RUN_CI_ON_HOST: "1"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"

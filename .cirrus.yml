@@ -272,15 +272,17 @@ task:
     - cd bitcoin-core
     - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
 task:
-  name: "x86_64 Linux  [bionic]  [system libs, no depends, valgrind]"
+  name: "x86_64 Linux  [focal]  [system libs, no depends, valgrind]"
   container:
-    image: ubuntu:18.04  # valgrind supp is for bionic
+    image: ubuntu:20.04  # valgrind supp is for bionic/focal
     cpu: 6
     memory: 14G  # valgrind needs a lot of memory
   timeout_in: 120
   env:
     FILE_ENV: "./ci/test/00_setup_env_native_valgrind.sh"
     MAKEJOBS: "-j7"
+    CC: "clang"
+    CXX: "clang++"  # Work around gcc-valgrind bug https://github.com/bitcoin/bitcoin/pull/19077#discussion_r518223118
     DANGER_RUN_CI_ON_HOST: "1"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"

@@ -2,7 +2,7 @@ language: bash
 env: >-
    SHASUM="shasum -a 256"
    BIN="OSX"
-   TEST_RUNNER_EXTRA="wallet_disable"  # Only run wallet_disable as a smoke test, see https://github.com/bitcoin/bitcoin/pull/17240#issuecomment-546022121 why the other tests are disabled
+   TEST_RUNNER_EXTRA="--timeout-factor=10 wallet_disable"  # Only run wallet_disable as a smoke test, see https://github.com/bitcoin/bitcoin/pull/17240#issuecomment-546022121 why the other tests are disabled
 install:
     - HOMEBREW_NO_AUTO_UPDATE=1 brew install python3 coreutils
     - pip3 install pyzmq
@@ -36,7 +36,7 @@ jobs:
    env: >-
     SHASUM=sha256sum
     BIN=ARM64
-    TEST_RUNNER_EXTRA=""
+    TEST_RUNNER_EXTRA="--timeout-factor=10"
    install:
     - sudo apt update && sudo apt install python3-zmq -y
 
@@ -66,7 +66,7 @@ jobs:
     - cd ${SRCDIR}
     - git checkout $VERSION
     - powershell "${PYTHON} ./test/util/bitcoin-util-test.py -v"
-    - powershell "${PYTHON} ./test/functional/test_runner.py wallet_disable wallet_multiwallet"
+    - powershell "${PYTHON} ./test/functional/test_runner.py --timeout-factor=10 wallet_disable wallet_multiwallet"
 
  - os: linux
    language: python
@@ -75,7 +75,7 @@ jobs:
    arch: arm64
    env: >-
     SHASUM="shasum -a 256"
-    TEST_RUNNER_EXTRA="--exclude rpc_bind,feature_config_args"
+    TEST_RUNNER_EXTRA="--timeout-factor=10 --exclude rpc_bind,feature_config_args"
    install:
     - sudo apt update && sudo apt install flatpak ca-certificates -y
     - flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo --user
@@ -105,7 +105,7 @@ jobs:
    arch: amd64
    env: >-
     SHASUM="shasum -a 256"
-    TEST_RUNNER_EXTRA="--exclude rpc_bind,feature_config_args"
+    TEST_RUNNER_EXTRA="--timeout-factor=10 --exclude rpc_bind,feature_config_args"
    install:
     - sudo apt update && sudo apt install flatpak ca-certificates -y
     - flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo --user

@@ -141,9 +141,9 @@ task:
     - cd bitcoin-core
     - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
 task:
-  name: "x86_64 Linux  [Xenial]  [system libs, no depends, clang]"
+  name: "x86_64 Linux  [Bionic]  [system libs, no depends, clang]"
   container:
-    image: ubuntu:xenial
+    image: ubuntu:bionic
     cpu: 2
     memory: 6G
   timeout_in: 120m
@@ -174,9 +174,9 @@ task:
     - cd bitcoin-core
     - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
 task:
-  name: "x86_64 Linux  [Xenial]  [system libs, no depends, gcc]"
+  name: "x86_64 Linux  [Bionic]  [system libs, no depends, gcc]"
   container:
-    image: ubuntu:xenial
+    image: ubuntu:bionic
     cpu: 2
     memory: 6G
   timeout_in: 120m

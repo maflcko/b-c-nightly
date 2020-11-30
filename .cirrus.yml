@@ -1,3 +1,5 @@
+container:
+  kvm: true
 task:
   name: "x86_64 FreeBsd 12.1 [system libs, no depends]"
   freebsd_instance:
@@ -299,7 +301,7 @@ task:
 task:
   name: "x86_64 Linux  [fedora]  [system libs, no depends, tsan]"
   container:
-    image: fedora:32
+    image: fedora:33
     cpu: 2
     memory: 6G
   timeout_in: 120m
@@ -325,7 +327,7 @@ task:
 task:
   name: "x86_64 Linux  [fedora]  [system libs, no depends, asan]"
   container:
-    image: fedora:32
+    image: fedora:33
     cpu: 2
     memory: 6G
   timeout_in: 120m
@@ -352,7 +354,7 @@ task:
 task:
   name: "x86_64 Linux  [fedora]  [system libs, no depends, fuzz, tsan]"
   container:
-    image: fedora:32
+    image: fedora:33
     cpu: 2
     memory: 6G
   timeout_in: 120m
@@ -377,7 +379,7 @@ task:
 task:
   name: "x86_64 Linux  [fedora]  [system libs, no depends, fuzz, asan]"
   container:
-    image: fedora:32
+    image: fedora:33
     cpu: 2
     memory: 6G
   timeout_in: 120m

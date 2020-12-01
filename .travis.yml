@@ -76,7 +76,7 @@ jobs:
    arch: arm64
    env: >-
     SHASUM="shasum -a 256"
-    TEST_RUNNER_EXTRA="--timeout-factor=10 --exclude rpc_bind,feature_config_args"
+    TEST_RUNNER_EXTRA="--exclude rpc_bind,feature_config_args"
    install:
     - sudo apt update && sudo apt install flatpak ca-certificates -y
     - flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo --user
@@ -106,7 +106,7 @@ jobs:
    arch: amd64
    env: >-
     SHASUM="shasum -a 256"
-    TEST_RUNNER_EXTRA="--timeout-factor=10 --exclude rpc_bind,feature_config_args"
+    TEST_RUNNER_EXTRA="--exclude rpc_bind,feature_config_args"
    install:
     - sudo apt update && sudo apt install flatpak ca-certificates -y
     - flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo --user

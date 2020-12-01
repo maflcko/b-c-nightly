@@ -32,6 +32,7 @@ jobs:
  include:
  - os: osx
  - os: linux
+   dist: bionic
    arch: arm64
    env: >-
     SHASUM=sha256sum

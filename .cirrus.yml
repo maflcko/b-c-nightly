@@ -1,11 +1,11 @@
 container:
   kvm: true
+  cpu: 2
+  memory: 6G
 task:
   name: "x86_64 FreeBsd 12.1 [system libs, no depends]"
   freebsd_instance:
     image_family: freebsd-12-1  # https://cirrus-ci.org/guide/FreeBSD/
-    cpu: 2
-    memory: 6G
   timeout_in: 120m
   env:
     MAKEJOBS: "-j4"
@@ -48,8 +48,6 @@ task:
   name: "x86_64 Linux  [CentOS 8]  [system libs, no depends]"
   container:
     image: centos:8
-    cpu: 2
-    memory: 6G
   timeout_in: 120m
   env:
     MAKEJOBS: "-j4"
@@ -82,8 +80,6 @@ task:
   name: "x86_64 Linux  [debian:experimental]  [system libs, no depends, clang]"
   container:
     image: debian:experimental
-    cpu: 2
-    memory: 6G
   timeout_in: 120m
   env:
     MAKEJOBS: "-j4"
@@ -114,8 +110,6 @@ task:
   name: "x86_64 Linux  [debian:experimental]  [system libs, no depends, gcc]"
   container:
     image: debian:experimental
-    cpu: 2
-    memory: 6G
   timeout_in: 120m
   env:
     MAKEJOBS: "-j4"
@@ -146,8 +140,6 @@ task:
   name: "x86_64 Linux  [Bionic]  [system libs, no depends, clang]"
   container:
     image: ubuntu:bionic
-    cpu: 2
-    memory: 6G
   timeout_in: 120m
   env:
     LC_ALL: "C.UTF-8"
@@ -179,8 +171,6 @@ task:
   name: "x86_64 Linux  [Bionic]  [system libs, no depends, gcc]"
   container:
     image: ubuntu:bionic
-    cpu: 2
-    memory: 6G
   timeout_in: 120m
   env:
     LC_ALL: "C.UTF-8"
@@ -212,8 +202,6 @@ task:
   name: "x86_64 Linux  [Alpine]  [system libs, no depends]"
   container:
     image: alpine:latest
-    cpu: 2
-    memory: 6G
   timeout_in: 120m
   env:
     LC_ALL: "C"
@@ -245,8 +233,6 @@ task:
   name: "x86_64 Linux  [Arch]  [system libs, no depends]"
   container:
     image: archlinux:latest
-    cpu: 2
-    memory: 6G
   timeout_in: 120m
   env:
     MAKEJOBS: "-j4"
@@ -302,8 +288,6 @@ task:
   name: "x86_64 Linux  [fedora]  [system libs, no depends, tsan]"
   container:
     image: fedora:33
-    cpu: 2
-    memory: 6G
   timeout_in: 120m
   env:
     CCACHE_SIZE: "200M"
@@ -328,8 +312,6 @@ task:
   name: "x86_64 Linux  [fedora]  [system libs, no depends, asan]"
   container:
     image: fedora:33
-    cpu: 2
-    memory: 6G
   timeout_in: 120m
   env:
     CCACHE_SIZE: "200M"
@@ -355,8 +337,6 @@ task:
   name: "x86_64 Linux  [fedora]  [system libs, no depends, fuzz, tsan]"
   container:
     image: fedora:33
-    cpu: 2
-    memory: 6G
   timeout_in: 120m
   env:
     CCACHE_SIZE: "200M"
@@ -380,8 +360,6 @@ task:
   name: "x86_64 Linux  [fedora]  [system libs, no depends, fuzz, asan]"
   container:
     image: fedora:33
-    cpu: 2
-    memory: 6G
   timeout_in: 120m
   env:
     CCACHE_SIZE: "200M"
@@ -405,8 +383,6 @@ task:
   name: "x86_64 Linux  [focal]  [system libs, no depends, fuzz, enable debug]"
   container:
     image: ubuntu:20.04
-    cpu: 2
-    memory: 6G
   timeout_in: 120m
   env:
     FILE_ENV: "./ci/test/00_setup_env_native_fuzz_enable_debug.sh"

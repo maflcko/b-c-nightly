@@ -254,7 +254,7 @@ task:
 task:
   name: "s390x [depends, qemu]"
   container:
-    image: ubuntu:bionic
+    image: debian:buster
   env:
     FILE_ENV: "./ci/test/00_setup_env_s390x.sh"
     MAKEJOBS: "-j4"

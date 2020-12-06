@@ -2,11 +2,11 @@ container:
   kvm: true
   cpu: 2
   memory: 6G
+timeout_in: 120m
 task:
   name: "x86_64 FreeBsd 12.1 [system libs, no depends]"
   freebsd_instance:
     image_family: freebsd-12-1  # https://cirrus-ci.org/guide/FreeBSD/
-  timeout_in: 120m
   env:
     MAKEJOBS: "-j4"
     CONFIGURE_OPTS: "--disable-dependency-tracking"
@@ -48,7 +48,6 @@ task:
   name: "x86_64 Linux  [CentOS 8]  [system libs, no depends]"
   container:
     image: centos:8
-  timeout_in: 120m
   env:
     MAKEJOBS: "-j4"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
@@ -80,7 +79,6 @@ task:
   name: "x86_64 Linux  [debian:experimental]  [system libs, no depends, clang]"
   container:
     image: debian:experimental
-  timeout_in: 120m
   env:
     MAKEJOBS: "-j4"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
@@ -110,7 +108,6 @@ task:
   name: "x86_64 Linux  [debian:experimental]  [system libs, no depends, gcc]"
   container:
     image: debian:experimental
-  timeout_in: 120m
   env:
     MAKEJOBS: "-j4"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
@@ -140,7 +137,6 @@ task:
   name: "x86_64 Linux  [Bionic]  [system libs, no depends, clang]"
   container:
     image: ubuntu:bionic
-  timeout_in: 120m
   env:
     LC_ALL: "C.UTF-8"
     MAKEJOBS: "-j4"
@@ -171,7 +167,6 @@ task:
   name: "x86_64 Linux  [Bionic]  [system libs, no depends, gcc]"
   container:
     image: ubuntu:bionic
-  timeout_in: 120m
   env:
     LC_ALL: "C.UTF-8"
     MAKEJOBS: "-j4"
@@ -202,7 +197,6 @@ task:
   name: "x86_64 Linux  [Alpine]  [system libs, no depends]"
   container:
     image: alpine:latest
-  timeout_in: 120m
   env:
     LC_ALL: "C"
     MAKEJOBS: "-j4"
@@ -233,7 +227,6 @@ task:
   name: "x86_64 Linux  [Arch]  [system libs, no depends]"
   container:
     image: archlinux:latest
-  timeout_in: 120m
   env:
     MAKEJOBS: "-j4"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
@@ -265,7 +258,6 @@ task:
     image: ubuntu:20.04  # valgrind supp is for bionic/focal
     cpu: 6
     memory: 14G  # valgrind needs a lot of memory
-  timeout_in: 120
   env:
     FILE_ENV: "./ci/test/00_setup_env_native_valgrind.sh"
     MAKEJOBS: "-j7"
@@ -288,7 +280,6 @@ task:
   name: "x86_64 Linux  [fedora]  [system libs, no depends, tsan]"
   container:
     image: fedora:33
-  timeout_in: 120m
   env:
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -312,7 +303,6 @@ task:
   name: "x86_64 Linux  [fedora]  [system libs, no depends, asan]"
   container:
     image: fedora:33
-  timeout_in: 120m
   env:
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -337,7 +327,6 @@ task:
   name: "x86_64 Linux  [fedora]  [system libs, no depends, fuzz, tsan]"
   container:
     image: fedora:33
-  timeout_in: 120m
   env:
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -360,7 +349,6 @@ task:
   name: "x86_64 Linux  [fedora]  [system libs, no depends, fuzz, asan]"
   container:
     image: fedora:33
-  timeout_in: 120m
   env:
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -383,7 +371,6 @@ task:
   name: "x86_64 Linux  [focal]  [system libs, no depends, fuzz, enable debug]"
   container:
     image: ubuntu:20.04
-  timeout_in: 120m
   env:
     FILE_ENV: "./ci/test/00_setup_env_native_fuzz_enable_debug.sh"
     MAKEJOBS: "-j4"

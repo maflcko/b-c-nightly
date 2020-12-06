@@ -253,6 +253,26 @@ task:
     - cd bitcoin-core
     - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
 task:
+  name: "[s390x]"
+  container:
+    image: ubuntu:18.04
+  env:
+    FILE_ENV: "./ci/test/00_setup_env_s390x.sh"
+    MAKEJOBS: "-j4"
+    DANGER_RUN_CI_ON_HOST: "1"
+    TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
+    CCACHE_SIZE: "200M"
+    CCACHE_DIR: "/tmp/ccache_dir"
+  ccache_cache:
+    folder: "/tmp/ccache_dir"
+  upstream_clone_script:
+    - apt update && apt install git -y
+    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
+    - cd bitcoin-core
+  ci_script:
+    - cd bitcoin-core
+    - ./ci/test_run_all.sh
+task:
   name: "x86_64 Linux  [focal]  [system libs, no depends, valgrind]"
   container:
     image: ubuntu:20.04  # valgrind supp is for bionic/focal

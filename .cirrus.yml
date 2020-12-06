@@ -42,7 +42,6 @@ task:
     - gmake check ${MAKEJOBS} VERBOSE=1
   functional_test_script:
     - cd bitcoin-core
-    - sed -i -e 's/wait=5, timeout=300/wait=5, timeout=3000/g' $(git grep -l 'timeout=' test)  # Temporary FIXME
     - eatmydata ./test/functional/test_runner.py $MAKEJOBS --ci --extended --exclude feature_dbcrash,p2p_timeouts --combinedlogslen=1000 --quiet --failfast --timeout-factor=10
 task:
   name: "CentOS 8 [system libs]"
@@ -310,15 +309,17 @@ task:
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
   install_pkgs_script:
     - dnf install gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb-cxx-devel python3 clang qt5-qttools-devel qt5-qtbase-devel -y
-  ci_script:
+  build_script:
     - cd bitcoin-core
     - ./autogen.sh && ./configure --with-sanitizers=thread --with-incompatible-bdb CC=clang CXX=clang++
     - make -j 4
   san_test_script:
+    - cd bitcoin-core
     - export LSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/lsan"
     - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
     - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
-    - echo TODO
+    - make -j 4 check
+    - ./test/functional/test_runner.py -j 4
 task:
   name: "fedora [system libs, asan]"
   container:
@@ -338,11 +339,12 @@ task:
     - ./autogen.sh && ./configure --with-sanitizers=address,integer,undefined --with-incompatible-bdb CC=clang CXX=clang++
     - make -j 4
   san_test_script:
+    - cd bitcoin-core
     - export LSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/lsan"
     - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
     - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
-    #- make -j 4 check
-    #- ./test/functional/test_runner.py -j 4
+    - make -j 4 check
+    - ./test/functional/test_runner.py -j 4
 task:
   name: "fedora [system libs, fuzz, tsan]"
   container:
@@ -363,8 +365,11 @@ task:
     - ./autogen.sh && ./configure --with-sanitizers=fuzzer,address,integer,undefined --enable-fuzz --enable-c++17 --with-incompatible-bdb CC=clang CXX=clang++
     - make -j 4
   tsan_test_script:
-    - echo TODO
-    #- ./test/fuzz/test_runner.py -j 4 -l DEBUG ../qa-assets/fuzz_seed_corpus/
+    - cd bitcoin-core
+    - export LSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/lsan"
+    - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
+    - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
+    - ./test/fuzz/test_runner.py -j 4 -l DEBUG ../qa-assets/fuzz_seed_corpus/
 task:
   name: "fedora [system libs, fuzz, asan]"
   container:
@@ -385,8 +390,11 @@ task:
     - ./autogen.sh && ./configure --with-sanitizers=fuzzer,thread --enable-fuzz --enable-c++17 --with-incompatible-bdb CC=clang CXX=clang++
     - make -j 4
   tsan_test_script:
-    - echo TODO
-    #- ./test/fuzz/test_runner.py -j 4 -l DEBUG ../qa-assets/fuzz_seed_corpus/
+    - cd bitcoin-core
+    - export LSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/lsan"
+    - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
+    - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
+    - ./test/fuzz/test_runner.py -j 4 -l DEBUG ../qa-assets/fuzz_seed_corpus/
 task:
   name: "focal [system libs, fuzz, enable debug]"
   container:

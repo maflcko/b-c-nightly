@@ -4,7 +4,7 @@ container:
   memory: 6G
 timeout_in: 120m
 task:
-  name: "x86_64 FreeBsd 12.1 [system libs, no depends]"
+  name: "FreeBsd 12.1 [system libs]"
   freebsd_instance:
     image_family: freebsd-12-1  # https://cirrus-ci.org/guide/FreeBSD/
   env:
@@ -45,7 +45,7 @@ task:
     - sed -i -e 's/wait=5, timeout=300/wait=5, timeout=3000/g' $(git grep -l 'timeout=' test)  # Temporary FIXME
     - eatmydata ./test/functional/test_runner.py $MAKEJOBS --ci --extended --exclude feature_dbcrash,p2p_timeouts --combinedlogslen=1000 --quiet --failfast --timeout-factor=10
 task:
-  name: "x86_64 Linux  [CentOS 8]  [system libs, no depends]"
+  name: "CentOS 8 [system libs]"
   container:
     image: centos:8
   env:
@@ -76,7 +76,7 @@ task:
     - cd bitcoin-core
     - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
 task:
-  name: "x86_64 Linux  [debian:experimental]  [system libs, no depends, clang]"
+  name: "debian:experimental [system libs, clang]"
   container:
     image: debian:experimental
   env:
@@ -105,7 +105,7 @@ task:
     - cd bitcoin-core
     - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
 task:
-  name: "x86_64 Linux  [debian:experimental]  [system libs, no depends, gcc]"
+  name: "debian:experimental [system libs, gcc]"
   container:
     image: debian:experimental
   env:
@@ -134,7 +134,7 @@ task:
     - cd bitcoin-core
     - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
 task:
-  name: "x86_64 Linux  [Bionic]  [system libs, no depends, clang]"
+  name: "Bionic [system libs, clang]"
   container:
     image: ubuntu:bionic
   env:
@@ -164,7 +164,7 @@ task:
     - cd bitcoin-core
     - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
 task:
-  name: "x86_64 Linux  [Bionic]  [system libs, no depends, gcc]"
+  name: "Bionic [system libs, gcc]"
   container:
     image: ubuntu:bionic
   env:
@@ -194,7 +194,7 @@ task:
     - cd bitcoin-core
     - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
 task:
-  name: "x86_64 Linux  [Alpine]  [system libs, no depends]"
+  name: "Alpine [system libs]"
   container:
     image: alpine:latest
   env:
@@ -224,7 +224,7 @@ task:
     - cd bitcoin-core
     - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
 task:
-  name: "x86_64 Linux  [Arch]  [system libs, no depends]"
+  name: "Arch [system libs]"
   container:
     image: archlinux:latest
   env:
@@ -253,9 +253,9 @@ task:
     - cd bitcoin-core
     - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
 task:
-  name: "[s390x]"
+  name: "s390x [depends, qemu]"
   container:
-    image: ubuntu:18.04
+    image: ubuntu:bionic
   env:
     FILE_ENV: "./ci/test/00_setup_env_s390x.sh"
     MAKEJOBS: "-j4"
@@ -273,7 +273,7 @@ task:
     - cd bitcoin-core
     - ./ci/test_run_all.sh
 task:
-  name: "x86_64 Linux  [focal]  [system libs, no depends, valgrind]"
+  name: "valgrind [focal, system libs]"
   container:
     image: ubuntu:20.04  # valgrind supp is for bionic/focal
     cpu: 6
@@ -297,7 +297,7 @@ task:
     - cd bitcoin-core
     - ./ci/test_run_all.sh
 task:
-  name: "x86_64 Linux  [fedora]  [system libs, no depends, tsan]"
+  name: "fedora [system libs, tsan]"
   container:
     image: fedora:33
   env:
@@ -320,7 +320,7 @@ task:
     - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
     - echo TODO
 task:
-  name: "x86_64 Linux  [fedora]  [system libs, no depends, asan]"
+  name: "fedora [system libs, asan]"
   container:
     image: fedora:33
   env:
@@ -344,7 +344,7 @@ task:
     #- make -j 4 check
     #- ./test/functional/test_runner.py -j 4
 task:
-  name: "x86_64 Linux  [fedora]  [system libs, no depends, fuzz, tsan]"
+  name: "fedora [system libs, fuzz, tsan]"
   container:
     image: fedora:33
   env:
@@ -366,7 +366,7 @@ task:
     - echo TODO
     #- ./test/fuzz/test_runner.py -j 4 -l DEBUG ../qa-assets/fuzz_seed_corpus/
 task:
-  name: "x86_64 Linux  [fedora]  [system libs, no depends, fuzz, asan]"
+  name: "fedora [system libs, fuzz, asan]"
   container:
     image: fedora:33
   env:
@@ -388,7 +388,7 @@ task:
     - echo TODO
     #- ./test/fuzz/test_runner.py -j 4 -l DEBUG ../qa-assets/fuzz_seed_corpus/
 task:
-  name: "x86_64 Linux  [focal]  [system libs, no depends, fuzz, enable debug]"
+  name: "focal [system libs, fuzz, enable debug]"
   container:
     image: ubuntu:20.04
   env:

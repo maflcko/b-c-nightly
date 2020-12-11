@@ -3,6 +3,8 @@ container:
   cpu: 2
   memory: 6G
 timeout_in: 120m
+env:
+  TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
 task:
   name: "FreeBsd 12.1 [system libs]"
   freebsd_instance:
@@ -10,7 +12,6 @@ task:
   env:
     MAKEJOBS: "-j4"
     CONFIGURE_OPTS: "--disable-dependency-tracking"
-    TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"
     CCACHE_COMPRESS: 1
     CCACHE_DIR: "/tmp/ccache_dir"

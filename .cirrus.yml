@@ -258,6 +258,7 @@ task:
   env:
     FILE_ENV: "./ci/test/00_setup_env_s390x.sh"
     MAKEJOBS: "-j4"
+    RUN_FUNCTIONAL_TESTS: "false"
     DANGER_RUN_CI_ON_HOST: "1"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"

@@ -6,6 +6,14 @@ timeout_in: 120m
 env:
   TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
 task:
+  persistent_worker:
+    labels:
+      arch: arm64
+  odroid_script:
+    - df -h
+    - pwd
+    - echo > ./pwd
+task:
   name: "FreeBsd 12.1 [system libs]"
   freebsd_instance:
     image_family: freebsd-12-1  # https://cirrus-ci.org/guide/FreeBSD/

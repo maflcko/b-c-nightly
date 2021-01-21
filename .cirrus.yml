@@ -18,7 +18,9 @@ task:
   odroid_install_script:
     - apt-get update
     - apt-get install curl wget htop git vim ccache     build-essential libtool autotools-dev automake pkg-config bsdmainutils python3-zmq     libevent-dev libboost-system-dev libboost-filesystem-dev libboost-test-dev libboost-thread-dev  libsqlite3-dev  libdb++-dev clang-10 llvm-10  -y
+  odroid_clonse_bc_script:
     - git clone https://github.com/bitcoin/bitcoin.git ./bitcoin-core
+  odroid_clonse_qa_script:
     - git clone https://github.com/bitcoin-core/qa-assets.git ./qa-assets
   odroid_build_script:
     - cd bitcoin-core

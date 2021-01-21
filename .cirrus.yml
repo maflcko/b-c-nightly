@@ -5,14 +5,30 @@ container:
 timeout_in: 120m
 env:
   TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
+  DEBIAN_FRONTEND: "noninteractive"
 task:
+  name: "Odroid fuzz aarch64 [bionic]"
   persistent_worker:
     labels:
       arch: arm64
-  odroid_script:
+  odroid_df_script:
     - df -h
-    - pwd
-    - echo > ./pwd
+    - find /tmp/cirrus* -mindepth 0 -maxdepth 0 -ctime +1 | xargs rm -rf
+    - df -h
+  odroid_install_script:
+    - apt-get update
+    - apt-get install curl wget htop git vim ccache     build-essential libtool autotools-dev automake pkg-config bsdmainutils python3-zmq     libevent-dev libboost-system-dev libboost-filesystem-dev libboost-test-dev libboost-thread-dev  libsqlite3-dev  libdb++-dev clang-10 llvm-10  -y
+    - git clone https://github.com/bitcoin/bitcoin.git ./bitcoin-core
+    - git clone https://github.com/bitcoin-core/qa-assets.git ./qa-assets
+  odroid_build_script:
+    - cd bitcoin-core
+    - git checkout master
+    - ./autogen.sh
+    - ./configure CC=clang-10 CXX=clang++-10   --enable-fuzz --with-sanitizers=fuzzer
+    - make -j 4
+  odroid_run_script:
+    - cd bitcoin-core
+    - ./test/fuzz/test_runner.py -j 4 ../qa-assets/fuzz_seed_corpus -l DEBUG
 task:
   name: "FreeBsd 12.1 [system libs]"
   freebsd_instance:

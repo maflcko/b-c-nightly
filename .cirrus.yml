@@ -21,9 +21,9 @@ task:
   odroid_ccache_script:
     - ccache --set-config=hash_dir=false  # Ignore debug value mismatch
     - ccache --set-config=max_size=512M
-  odroid_clonse_bc_script:
+  odroid_clone_bc_script:
     - git clone https://github.com/bitcoin/bitcoin.git ./bitcoin-core
-  odroid_clonse_qa_script:
+  odroid_clone_qa_script:
     - git clone https://github.com/bitcoin-core/qa-assets.git ./qa-assets
   odroid_build_script:
     - cd bitcoin-core

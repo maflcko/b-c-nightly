@@ -13,7 +13,7 @@ task:
       arch: arm64
   odroid_df_script:
     - df -h
-    - find /tmp/cirrus* -mindepth 0 -maxdepth 0 -ctime +1 | xargs rm -rf
+    - find /tmp/cirrus* -mindepth 0 -maxdepth 0 -ctime +0 | xargs rm -rf
     - df -h
   odroid_install_script:
     - apt-get update

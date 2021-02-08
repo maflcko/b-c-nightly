@@ -67,7 +67,7 @@ jobs:
     - cd ${SRCDIR}
     - git checkout $VERSION
     - powershell "${PYTHON} ./test/util/bitcoin-util-test.py -v"
-    - powershell "${PYTHON} ./test/functional/test_runner.py --timeout-factor=10 wallet_disable wallet_multiwallet"
+    - powershell "${PYTHON} ./test/functional/test_runner.py --timeout-factor=10"
 
  - os: linux
    language: python

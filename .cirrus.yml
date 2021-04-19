@@ -349,7 +349,7 @@ task:
     memory: 14G  # valgrind needs a lot of memory
   env:
     FILE_ENV: "./ci/test/00_setup_env_native_valgrind.sh"
-    MAKEJOBS: "-j7"
+    MAKEJOBS: "-j12"
     CC: "clang"
     CXX: "clang++"  # Work around gcc-valgrind bug https://github.com/bitcoin/bitcoin/pull/19077#discussion_r518223118
     DANGER_RUN_CI_ON_HOST: "1"

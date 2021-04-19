@@ -381,7 +381,7 @@ task:
     - dnf install gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb-cxx-devel python3 clang qt5-qttools-devel qt5-qtbase-devel -y
   build_script:
     - cd bitcoin-core
-    - ./autogen.sh && ./configure --with-sanitizers=thread --with-incompatible-bdb CC=clang CXX=clang++
+    - ./autogen.sh && ./configure --enable-suppress-external-warnings --with-sanitizers=thread --with-incompatible-bdb CC=clang CXX=clang++
     - make -j 4
   san_test_script:
     - cd bitcoin-core

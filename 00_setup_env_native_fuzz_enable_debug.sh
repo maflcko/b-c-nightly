@@ -14,4 +14,4 @@ export RUN_UNIT_TESTS=false
 export RUN_FUNCTIONAL_TESTS=false
 export RUN_FUZZ_TESTS=true
 export GOAL="install"
-export BITCOIN_CONFIG="--enable-fuzz --enable-debug --with-sanitizers=fuzzer --enable-c++17 CC=clang CXX=clang++"
+export BITCOIN_CONFIG="--enable-fuzz --enable-debug --with-sanitizers=fuzzer CC=clang CXX=clang++"

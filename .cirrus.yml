@@ -482,6 +482,7 @@ task:
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
     - cd bitcoin-core
     - mv ../00_setup_env_native_fuzz_enable_debug.sh ./ci/test/
+    - sed -i 's/FuzzedDataProvider fuzzed_data_provider/return;FuzzedDataProvider fuzzed_data_provider/g' ./src/test/fuzz/validation_load_mempool.cpp
   ci_script:
     - cd bitcoin-core
     - ./ci/test_run_all.sh

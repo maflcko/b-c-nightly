@@ -419,6 +419,8 @@ task:
   name: "fedora [system libs, fuzz, tsan]"
   container:
     image: fedora:34
+    cpu: 3
+    memory: 6G
   env:
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -444,6 +446,8 @@ task:
   name: "fedora [system libs, fuzz, asan]"
   container:
     image: fedora:34
+    cpu: 3
+    memory: 6G
   env:
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"

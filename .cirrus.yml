@@ -419,7 +419,7 @@ task:
   name: "fedora [system libs, fuzz, tsan]"
   container:
     image: fedora:34
-    cpu: 3
+    cpu: 4
     memory: 6G
   env:
     CCACHE_SIZE: "200M"
@@ -446,7 +446,7 @@ task:
   name: "fedora [system libs, fuzz, asan]"
   container:
     image: fedora:34
-    cpu: 3
+    cpu: 4
     memory: 6G
   env:
     CCACHE_SIZE: "200M"

@@ -247,8 +247,6 @@ task:
     - apt update && apt install git -y
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
     - cd bitcoin-core
-    - sed -i 's/raise AssertionError("Unexpected stderr/pass#/g' ./test/functional/test_framework/test_node.py  # ignore stderr behavior
-    - sed -i 's/log_stderr.seek.0./return/g'                     ./test/functional/test_framework/test_node.py
   ci_script:
     - cd bitcoin-core
     - ./ci/test_run_all.sh

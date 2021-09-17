@@ -42,9 +42,9 @@ task:
 #    - cd ${BUILDDIR}
 #    - $SHASUM ./src/*
 task:
-  name: "FreeBsd 12.2 [system libs]"
+  name: "FreeBsd 13.0 [system libs]"
   freebsd_instance:
-    image_family: freebsd-12-2  # https://cirrus-ci.org/guide/FreeBSD/
+    image_family: freebsd-13-0  # https://cirrus-ci.org/guide/FreeBSD/
   env:
     MAKEJOBS: "-j4"
     CONFIGURE_OPTS: "--disable-dependency-tracking"

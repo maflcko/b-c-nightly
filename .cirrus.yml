@@ -7,7 +7,7 @@ env:
   TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
   DEBIAN_FRONTEND: "noninteractive"
 task:
-  name: "Windows"
+  name: "Windows [gitian]"
   windows_container:
     image: cirrusci/windowsservercore:2019
   env:

@@ -231,7 +231,7 @@ task:
 task:
   name: "s390x [depends, qemu]"
   container:
-    image: debian:buster
+    image: debian:bookworm
     cpu: 4
     memory: 10G
   env:

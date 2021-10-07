@@ -1,5 +1,4 @@
 container:
-  kvm: true
   cpu: 2
   memory: 6G
 timeout_in: 120m
@@ -275,7 +274,9 @@ task:
 task:
   name: "fedora [system libs, tsan]"
   container:
-    image: fedora:34
+    image: fedora:35
+    cpu: 2
+    memory: 8G
   env:
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -300,7 +301,9 @@ task:
 task:
   name: "fedora [system libs, asan]"
   container:
-    image: fedora:34
+    image: fedora:35
+    cpu: 4
+    memory: 6G
   env:
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -325,9 +328,7 @@ task:
 task:
   name: "fedora [system libs, fuzz, tsan]"
   container:
-    image: fedora:34
-    cpu: 4
-    memory: 6G
+    image: fedora:35
   env:
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -352,9 +353,9 @@ task:
 task:
   name: "fedora [system libs, fuzz, asan]"
   container:
-    image: fedora:34
-    cpu: 4
-    memory: 6G
+    image: fedora:35
+    cpu: 6
+    memory: 8G
   env:
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -369,13 +370,13 @@ task:
   ci_script:
     - cd bitcoin-core
     - ./autogen.sh && ./configure --with-sanitizers=fuzzer,address,integer,undefined --enable-fuzz --enable-c++17 --with-incompatible-bdb CC=clang CXX=clang++
-    - make -j 4
+    - make -j 6
   tsan_test_script:
     - cd bitcoin-core
     - export LSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/lsan"
     - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
     - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
-    - ./test/fuzz/test_runner.py -j 4 -l DEBUG ../qa-assets/fuzz_seed_corpus/
+    - ./test/fuzz/test_runner.py -j 6 -l DEBUG ../qa-assets/fuzz_seed_corpus/
 task:
   name: "focal [system libs, fuzz, enable debug]"
   container:
@@ -401,6 +402,8 @@ task:
   name: "focal [system libs, fuzz, depends DEBUG]"
   container:
     image: ubuntu:20.04
+    cpu: 4
+    memory: 6G
   env:
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"

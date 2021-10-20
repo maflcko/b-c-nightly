@@ -250,9 +250,9 @@ task:
     - cd bitcoin-core
     - ./ci/test_run_all.sh
 task:
-  name: "valgrind [focal, system libs]"
+  name: "valgrind [impish, system libs]"
   container:
-    image: ubuntu:20.04  # valgrind supp is for bionic/focal
+    image: ubuntu:impish # valgrind supp is for bionic/focal, but use impish to avoid std::optional false-positive
     cpu: 6
     memory: 14G  # valgrind needs a lot of memory
   env:

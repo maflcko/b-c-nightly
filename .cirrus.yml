@@ -275,8 +275,8 @@ task:
   name: "fedora [system libs, tsan]"
   container:
     image: fedora:35
-    cpu: 2
-    memory: 8G
+    cpu: 4
+    memory: 16G
   env:
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -297,7 +297,7 @@ task:
     - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
     - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
     - make -j 4 check
-    - ./test/functional/test_runner.py -j 4
+    - ./test/functional/test_runner.py -j 8
 task:
   name: "fedora [system libs, asan]"
   container:

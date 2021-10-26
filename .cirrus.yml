@@ -297,7 +297,7 @@ task:
     - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
     - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
     - make -j 4 check
-    - ./test/functional/test_runner.py -j 8
+    - ./test/functional/test_runner.py -j 8 --timeout-factor=5
 task:
   name: "fedora [system libs, asan]"
   container:

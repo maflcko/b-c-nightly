@@ -91,8 +91,8 @@ task:
   ccache_cache:
     folder: "/tmp/ccache_dir"
   install_script:
-    - zypper install -t pattern devel_basis
-    - zypper install git libtool pkg-config automake python3 libevent-devel libboost_system-devel libboost_filesystem-devel libboost_test-devel gcc-c++ ccache zeromq-devel libqt5-qtbase-devel libqt5-qttools-devel qrencode-devel sqlite3-devel
+    - zypper --non-interactive install -t pattern devel_basis
+    - zypper --non-interactive install git libtool pkg-config automake python3 libevent-devel libboost_system-devel libboost_filesystem-devel libboost_test-devel gcc-c++ ccache zeromq-devel libqt5-qtbase-devel libqt5-qttools-devel qrencode-devel sqlite3-devel
     - ccache --max-size=${CCACHE_SIZE}
   upstream_clone_script:
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core

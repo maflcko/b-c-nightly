@@ -80,6 +80,36 @@ task:
     - cd bitcoin-core
     - eatmydata ./test/functional/test_runner.py $MAKEJOBS --ci --extended --exclude feature_block,feature_dbcrash,p2p_timeouts --combinedlogslen=1000 --quiet --failfast --timeout-factor=10
 task:
+  name: "OpenSuse Tumbleweed [system libs]"
+  container:
+    image: opensuse/tumbleweed
+  env:
+    MAKEJOBS: "-j4"
+    TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
+    CCACHE_SIZE: "200M"
+    CCACHE_DIR: "/tmp/ccache_dir"
+  ccache_cache:
+    folder: "/tmp/ccache_dir"
+  install_script:
+    - zypper install -t pattern devel_basis
+    - zypper install git libtool pkg-config automake python3 libevent-devel libboost_system-devel libboost_filesystem-devel libboost_test-devel gcc-c++ ccache zeromq-devel libqt5-qtbase-devel libqt5-qttools-devel qrencode-devel sqlite3-devel
+    - ccache --max-size=${CCACHE_SIZE}
+  upstream_clone_script:
+    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
+  configure_script:
+    - cd bitcoin-core
+    - ./autogen.sh
+    - ./configure || ( cat config.log && false)
+  make_script:
+    - cd bitcoin-core
+    - make ${MAKEJOBS} || ( echo "Build failure. Verbose build follows." && make V=1 ; false )
+  check_script:
+    - cd bitcoin-core
+    - make check ${MAKEJOBS} VERBOSE=1
+  functional_test_script:
+    - cd bitcoin-core
+    - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
+task:
   name: "CentOS 8 [system libs]"
   container:
     image: centos:8

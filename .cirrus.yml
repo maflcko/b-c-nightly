@@ -141,7 +141,7 @@ task:
     - cd bitcoin-core
     - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
 task:
-  name: "debian:experimental [system libs, clang]"
+  name: "debian:experimental [system libs, clang, sqlite-only]"
   container:
     image: debian:experimental
   env:
@@ -152,7 +152,7 @@ task:
   ccache_cache:
     folder: "/tmp/ccache_dir"
   install_script:
-    - apt update && apt -t experimental install clang git ccache build-essential libtool autotools-dev automake pkg-config bsdmainutils python3-zmq libevent-dev libboost-system-dev libboost-filesystem-dev libboost-test-dev libboost-thread-dev libdb++-dev qttools5-dev qttools5-dev-tools -y
+    - apt update && apt -t experimental install clang git ccache build-essential libtool autotools-dev automake pkg-config bsdmainutils python3-zmq libevent-dev libboost-system-dev libboost-filesystem-dev libboost-test-dev libboost-thread-dev libsqlite3-dev qttools5-dev qttools5-dev-tools -y
     - ccache --max-size=${CCACHE_SIZE}
   upstream_clone_script:
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
@@ -170,7 +170,7 @@ task:
     - cd bitcoin-core
     - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
 task:
-  name: "debian:experimental [system libs, gcc]"
+  name: "debian:experimental [system libs, gcc, bdb-only]"
   container:
     image: debian:experimental
   env:

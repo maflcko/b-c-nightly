@@ -258,7 +258,7 @@ task:
     - cd bitcoin-core
     - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
 task:
-  name: "s390x [depends, qemu]"
+  name: "s390x qemu"
   container:
     image: debian:bookworm
     cpu: 4
@@ -280,7 +280,7 @@ task:
     - cd bitcoin-core
     - ./ci/test_run_all.sh
 task:
-  name: "valgrind [22.04, system libs]"
+  name: "valgrind, system libs [jammy]"
   container:
     image: ubuntu:22.04  # valgrind supp is for bionic/focal, but use 22.04 to avoid std::optional false-positive
     cpu: 6
@@ -302,7 +302,7 @@ task:
     - cd bitcoin-core
     - ./ci/test_run_all.sh
 task:
-  name: "fedora [system libs, tsan]"
+  name: "tsan, system libs [fedora]"
   container:
     image: fedora:35
     cpu: 4
@@ -329,7 +329,7 @@ task:
     - make -j 4 check
     - ./test/functional/test_runner.py -j 8 --timeout-factor=5
 task:
-  name: "fedora [system libs, asan]"
+  name: "asan, system libs [fedora]"
   container:
     image: fedora:35
     cpu: 4
@@ -384,7 +384,7 @@ task:
 #    - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
 #    - ./test/fuzz/test_runner.py -j 4 -l DEBUG ../qa-assets/fuzz_seed_corpus/
 task:
-  name: "fedora [system libs, fuzz, asan]"
+  name: "fuzz, asan, system libs [fedora]"
   container:
     image: fedora:35
     cpu: 6

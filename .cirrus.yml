@@ -112,7 +112,7 @@ task:
 task:
   name: "CentOS 8 [system libs]"
   container:
-    image: centos:8
+    image: quay.io/centos/centos:stream8
   env:
     MAKEJOBS: "-j4"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
@@ -121,9 +121,8 @@ task:
   ccache_cache:
     folder: "/tmp/ccache_dir"
   install_script:
-    - dnf -y install epel-release dnf-plugin*
-    - dnf config-manager --set-enabled PowerTools
-    - dnf install -y ccache gcc-c++ libtool make git python3 python3-zmq boost-devel libevent-devel libdb-cxx-devel zeromq-devel qt5-qtbase-devel qt5-qttools-devel qrencode-devel  # upnp disabled for now
+    - dnf -y install epel-release
+    - dnf install -y ccache gcc-c++ libtool make git python3 python3-zmq boost-devel libevent-devel sqlite-devel zeromq-devel qt5-qtbase-devel qt5-qttools-devel # disabled for now: bdb, qrencode-devel, upnp
     - ccache --max-size=${CCACHE_SIZE}
   upstream_clone_script:
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core

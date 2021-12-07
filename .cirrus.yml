@@ -411,9 +411,9 @@ task:
     - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
     - ./test/fuzz/test_runner.py -j 6 -l DEBUG ../qa-assets/fuzz_seed_corpus/
 task:
-  name: "focal [system libs, fuzz, enable debug]"
+  name: "fuzz, system libs, enable debug [jammy]"
   container:
-    image: ubuntu:20.04
+    image: ubuntu:22.04
   env:
     FILE_ENV: "./ci/test/00_setup_env_native_fuzz_enable_debug.sh"
     MAKEJOBS: "-j4"
@@ -432,9 +432,9 @@ task:
     - cd bitcoin-core
     - ./ci/test_run_all.sh
 task:
-  name: "focal [system libs, fuzz, depends DEBUG]"
+  name: "fuzz, depends DEBUG [jammy]"
   container:
-    image: ubuntu:20.04
+    image: ubuntu:22.04
     cpu: 4
     memory: 6G
   env:

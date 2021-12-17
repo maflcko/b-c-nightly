@@ -1,6 +1,7 @@
 container:
   cpu: 2
-  memory: 6G
+  memory: 8G
+  greedy: true
 timeout_in: 120m
 env:
   TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
@@ -84,7 +85,7 @@ task:
   container:
     image: opensuse/tumbleweed
   env:
-    MAKEJOBS: "-j4"
+    MAKEJOBS: "-j6"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -114,7 +115,7 @@ task:
   container:
     image: quay.io/centos/centos:stream8
   env:
-    MAKEJOBS: "-j4"
+    MAKEJOBS: "-j6"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -144,7 +145,7 @@ task:
   container:
     image: debian:experimental
   env:
-    MAKEJOBS: "-j4"
+    MAKEJOBS: "-j6"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -173,7 +174,7 @@ task:
   container:
     image: debian:experimental
   env:
-    MAKEJOBS: "-j4"
+    MAKEJOBS: "-j6"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -203,7 +204,7 @@ task:
     image: alpine:latest
   env:
     LC_ALL: "C"
-    MAKEJOBS: "-j4"
+    MAKEJOBS: "-j8"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -232,7 +233,7 @@ task:
   container:
     image: archlinux:latest
   env:
-    MAKEJOBS: "-j4"
+    MAKEJOBS: "-j8"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -262,6 +263,7 @@ task:
     image: debian:bookworm
     cpu: 4
     memory: 10G
+    greedy: true
   env:
     FILE_ENV: "./ci/test/00_setup_env_s390x.sh"
     MAKEJOBS: "-j10"
@@ -284,6 +286,7 @@ task:
     image: ubuntu:22.04  # valgrind supp is for bionic/focal, but use 22.04 to avoid std::optional false-positive
     cpu: 6
     memory: 14G  # valgrind needs a lot of memory
+    greedy: true
   env:
     FILE_ENV: "./ci/test/00_setup_env_native_valgrind.sh"
     MAKEJOBS: "-j12"
@@ -306,6 +309,7 @@ task:
     image: fedora:35
     cpu: 4
     memory: 16G
+    greedy: true
   env:
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -315,24 +319,25 @@ task:
     - dnf install git -y
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
   install_pkgs_script:
-    - dnf install gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb-cxx-devel python3 clang qt5-qttools-devel qt5-qtbase-devel -y
+    - dnf install gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb-cxx-devel python3 clang qt5-qttools-devel qt5-qtbase-devel sqlite-devel -y
   build_script:
     - cd bitcoin-core
     - ./autogen.sh && ./configure --enable-suppress-external-warnings --with-sanitizers=thread --with-incompatible-bdb CC=clang CXX=clang++
-    - make -j 4
+    - make -j 6
   san_test_script:
     - cd bitcoin-core
     - export LSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/lsan"
     - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
     - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
-    - make -j 4 check
-    - ./test/functional/test_runner.py -j 8 --timeout-factor=5
+    - make -j 6 check
+    - ./test/functional/test_runner.py -j 9 --timeout-factor=5
 task:
   name: "asan, system libs [fedora]"
   container:
     image: fedora:35
     cpu: 4
-    memory: 6G
+    memory: 8G
+    greedy: true
   env:
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -342,18 +347,18 @@ task:
     - dnf install git -y
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
   install_pkgs_script:
-    - dnf install gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb-cxx-devel python3 clang qt5-qttools-devel qt5-qtbase-devel -y
+    - dnf install gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb-cxx-devel python3 clang qt5-qttools-devel qt5-qtbase-devel sqlite-devel -y
   ci_script:
     - cd bitcoin-core
     - ./autogen.sh && ./configure --with-sanitizers=address,integer,undefined --with-incompatible-bdb CC=clang CXX=clang++
-    - make -j 4
+    - make -j 8
   san_test_script:
     - cd bitcoin-core
     - export LSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/lsan"
     - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
     - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
-    - make -j 4 check
-    - ./test/functional/test_runner.py -j 4 --timeout-factor=5
+    - make -j 8 check
+    - ./test/functional/test_runner.py -j 8 --timeout-factor=5
 ## Disabled due to https://github.com/google/sanitizers/issues/1076
 #   Location is global '__TMC_END__' at 0x55960bb18a48 (fuzz+0x000001984a51)
 #  SUMMARY: ThreadSanitizer: data race src/logging.cpp:18 in LogInstance()
@@ -386,8 +391,9 @@ task:
   name: "fuzz, asan, system libs [fedora]"
   container:
     image: fedora:35
-    cpu: 6
+    cpu: 4
     memory: 8G
+    greedy: true
   env:
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -402,20 +408,20 @@ task:
   ci_script:
     - cd bitcoin-core
     - ./autogen.sh && ./configure --with-sanitizers=fuzzer,address,integer,undefined --enable-fuzz --enable-c++17 --with-incompatible-bdb CC=clang CXX=clang++
-    - make -j 6
+    - make -j 8
   tsan_test_script:
     - cd bitcoin-core
     - export LSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/lsan"
     - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
     - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
-    - ./test/fuzz/test_runner.py -j 6 -l DEBUG ../qa-assets/fuzz_seed_corpus/
+    - ./test/fuzz/test_runner.py -j 8 -l DEBUG ../qa-assets/fuzz_seed_corpus/
 task:
   name: "fuzz, system libs, enable debug [jammy]"
   container:
     image: ubuntu:22.04
   env:
     FILE_ENV: "./ci/test/00_setup_env_native_fuzz_enable_debug.sh"
-    MAKEJOBS: "-j4"
+    MAKEJOBS: "-j8"
     DANGER_RUN_CI_ON_HOST: "1"
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -436,6 +442,7 @@ task:
     image: ubuntu:22.04
     cpu: 4
     memory: 6G
+    greedy: true
   env:
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -454,7 +461,7 @@ task:
   fuzz_build_script:
     - cd bitcoin-core
     - ./autogen.sh && CC=clang CXX=clang++ CONFIG_SITE="$PWD/depends/x86_64-pc-linux-gnu/share/config.site" ./configure --enable-fuzz --enable-debug --with-sanitizers=fuzzer
-    - make -j 4
+    - make -j 8
   fuzz_run_script:
     - cd bitcoin-core
-    - ./test/fuzz/test_runner.py -j 4 -l DEBUG ../qa-assets/fuzz_seed_corpus/
+    - ./test/fuzz/test_runner.py -j 8 -l DEBUG ../qa-assets/fuzz_seed_corpus/

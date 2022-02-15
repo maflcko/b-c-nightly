@@ -306,7 +306,7 @@ task:
 task:
   name: "tsan, system libs [fedora]"
   container:
-    image: fedora:35
+    image: fedora:rawhide
     cpu: 4
     memory: 16G
     greedy: true
@@ -334,7 +334,7 @@ task:
 task:
   name: "asan, system libs [fedora]"
   container:
-    image: fedora:35
+    image: fedora:rawhide
     cpu: 4
     memory: 8G
     greedy: true
@@ -365,7 +365,7 @@ task:
 #task:
 #  name: "fedora [system libs, fuzz, tsan]"
 #  container:
-#    image: fedora:35
+#    image: fedora:rawhide
 #  env:
 #    CCACHE_SIZE: "200M"
 #    CCACHE_DIR: "/tmp/ccache_dir"
@@ -390,7 +390,7 @@ task:
 task:
   name: "fuzz, asan, system libs [fedora]"
   container:
-    image: fedora:35
+    image: fedora:rawhide
     cpu: 4
     memory: 8G
     greedy: true

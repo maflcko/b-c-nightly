@@ -152,14 +152,14 @@ task:
   ccache_cache:
     folder: "/tmp/ccache_dir"
   install_script:
-    - apt update && apt -t experimental install clang git ccache build-essential libtool autotools-dev automake pkg-config bsdmainutils python3-zmq libevent-dev libboost-dev libsqlite3-dev qttools5-dev qttools5-dev-tools -y
+    - apt update && apt -t experimental install libc++abi-dev libc++-dev clang llvm git ccache build-essential libtool autotools-dev automake pkg-config bsdmainutils python3-zmq libevent-dev libboost-dev libsqlite3-dev qttools5-dev qttools5-dev-tools -y
     - ccache --max-size=${CCACHE_SIZE}
   upstream_clone_script:
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
   configure_script:
     - cd bitcoin-core
     - ./autogen.sh
-    - ./configure --with-incompatible-bdb CC=clang CXX=clang++ || ( cat config.log && false)
+    - ./configure --with-incompatible-bdb CC=clang CXX="clang++ -stdlib=libc++" || ( cat config.log && false)
   make_script:
     - cd bitcoin-core
     - make ${MAKEJOBS} ${GOAL} || ( echo "Build failure. Verbose build follows." && make ${GOAL} V=1 ; false )

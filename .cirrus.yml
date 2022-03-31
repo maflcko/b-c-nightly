@@ -281,9 +281,9 @@ task:
     - cd bitcoin-core
     - ./ci/test_run_all.sh
 task:
-  name: "valgrind, system libs [jammy]"
+  name: "valgrind, system libs [bookworm]"
   container:
-    image: ubuntu:22.04  # valgrind supp is for bionic/focal, but use 22.04 to avoid std::optional false-positive
+    image: debian:bookworm  # valgrind supp is for bionic/focal, but use 22.04 to avoid std::optional false-positive, use bookworm to avoid clang-14 bug
     cpu: 6
     memory: 14G  # valgrind needs a lot of memory
     greedy: true

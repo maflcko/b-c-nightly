@@ -218,7 +218,7 @@ task:
   configure_script:
     - cd bitcoin-core
     - ./autogen.sh
-    - ./configure --disable-wallet || ( cat config.log && false)
+    - ./configure || ( cat config.log && false)
   make_script:
     - cd bitcoin-core
     - make ${MAKEJOBS} || ( echo "Build failure. Verbose build follows." && make V=1 ; false )
@@ -247,7 +247,7 @@ task:
   configure_script:
     - cd bitcoin-core
     - ./autogen.sh
-    - ./configure --disable-wallet || ( cat config.log && false)
+    - ./configure || ( cat config.log && false)
   make_script:
     - cd bitcoin-core
     - make ${MAKEJOBS} || ( echo "Build failure. Verbose build follows." && make V=1 ; false )

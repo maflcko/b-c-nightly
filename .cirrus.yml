@@ -284,8 +284,8 @@ task:
   name: "valgrind, system libs [jammy]"
   container:
     image: ubuntu:22.04  # valgrind supp is for bionic/focal, but use 22.04 to avoid std::optional false-positive
-    cpu: 6
-    memory: 14G  # valgrind needs a lot of memory
+    cpu: 4
+    memory: 16G  # valgrind needs a lot of memory
     greedy: true
   env:
     FILE_ENV: "./ci/test/00_setup_env_native_valgrind.sh"

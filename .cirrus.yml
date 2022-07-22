@@ -440,9 +440,6 @@ task:
   name: "fuzz, depends DEBUG [jammy]"
   container:
     image: ubuntu:22.04
-    cpu: 4
-    memory: 6G
-    greedy: true
   env:
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"

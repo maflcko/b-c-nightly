@@ -79,7 +79,7 @@ task:
     - gmake check ${MAKEJOBS} VERBOSE=1
   functional_test_script:
     - cd bitcoin-core
-    - eatmydata ./test/functional/test_runner.py $MAKEJOBS --ci --extended --exclude feature_block,feature_dbcrash,p2p_timeouts --combinedlogslen=1000 --quiet --failfast --timeout-factor=10
+    - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --exclude feature_block,feature_dbcrash,p2p_timeouts --combinedlogslen=1000 --quiet --failfast --timeout-factor=10
 task:
   name: "OpenSuse Tumbleweed [system libs]"
   container:

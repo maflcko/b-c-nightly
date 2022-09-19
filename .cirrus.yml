@@ -392,7 +392,7 @@ task:
   container:
     image: fedora:rawhide
     cpu: 4
-    memory: 8G
+    memory: 12G
     greedy: true
   env:
     CCACHE_SIZE: "200M"

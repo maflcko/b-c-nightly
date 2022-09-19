@@ -360,7 +360,7 @@ task:
     - make -j 6 check
     - ./test/functional/test_runner.py -j 9 --timeout-factor=5
 task:
-  name: "asan, system libs [fedora]"
+  name: "asan, clang, system libs [fedora]"
   container:
     image: fedora:rawhide
     cpu: 4
@@ -379,6 +379,34 @@ task:
   ci_script:
     - cd bitcoin-core
     - ./autogen.sh && ./configure --with-sanitizers=address,integer,undefined --with-incompatible-bdb CC=clang CXX=clang++
+    - make -j 8
+  san_test_script:
+    - cd bitcoin-core
+    - export LSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/lsan"
+    - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
+    - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
+    - make -j 8 check
+    - ./test/functional/test_runner.py -j 8 --timeout-factor=5
+task:
+  name: "asan, gcc, system libs [fedora]"
+  container:
+    image: fedora:rawhide
+    cpu: 4
+    memory: 8G
+    greedy: true
+  env:
+    CCACHE_SIZE: "200M"
+    CCACHE_DIR: "/tmp/ccache_dir"
+  ccache_cache:
+    folder: "/tmp/ccache_dir"
+  upstream_clone_script:
+    - dnf install git -y
+    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
+  install_pkgs_script:
+    - dnf install libasan libubsan gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb-cxx-devel python3 clang qt5-qttools-devel qt5-qtbase-devel sqlite-devel -y
+  ci_script:
+    - cd bitcoin-core
+    - ./autogen.sh && ./configure --with-sanitizers=address,undefined --with-incompatible-bdb
     - make -j 8
   san_test_script:
     - cd bitcoin-core

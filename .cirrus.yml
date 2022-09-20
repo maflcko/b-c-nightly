@@ -392,7 +392,7 @@ task:
   container:
     image: fedora:rawhide
     cpu: 4
-    memory: 12G
+    memory: 16G
     greedy: true
   env:
     CCACHE_SIZE: "200M"
@@ -406,6 +406,7 @@ task:
     - dnf install libasan libubsan gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb-cxx-devel python3 clang qt5-qttools-devel qt5-qtbase-devel sqlite-devel -y
   ci_script:
     - cd bitcoin-core
+    - echo 'nonnull-attribute:streams.h' >> test/sanitizer_suppressions/ubsan
     - ./autogen.sh && ./configure --with-sanitizers=address,undefined --with-incompatible-bdb
     - make -j 8
   san_test_script:
@@ -414,7 +415,7 @@ task:
     - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
     - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
     - make -j 8 check
-    - ./test/functional/test_runner.py -j 8 --timeout-factor=5
+    - ./test/functional/test_runner.py -j 8 --timeout-factor=10
 ## Disabled due to https://github.com/google/sanitizers/issues/1076
 #   Location is global '__TMC_END__' at 0x55960bb18a48 (fuzz+0x000001984a51)
 #  SUMMARY: ThreadSanitizer: data race src/logging.cpp:18 in LogInstance()

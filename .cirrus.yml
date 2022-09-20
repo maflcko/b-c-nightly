@@ -347,7 +347,7 @@ task:
     - dnf install git -y
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
   install_pkgs_script:
-    - dnf install libtsan gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb-cxx-devel python3 qt5-qttools-devel qt5-qtbase-devel sqlite-devel -y
+    - dnf install libtsan gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb-cxx-devel python3 sqlite-devel -y
   build_script:
     - cd bitcoin-core
     - ./autogen.sh && ./configure --enable-suppress-external-warnings --with-sanitizers=thread --with-incompatible-bdb

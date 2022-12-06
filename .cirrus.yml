@@ -152,7 +152,7 @@ task:
   ccache_cache:
     folder: "/tmp/ccache_dir"
   install_script:
-    - apt update && apt -t experimental install libc++abi-dev libc++-dev clang llvm git ccache build-essential libtool autotools-dev automake pkg-config bsdmainutils python3-zmq libevent-dev libboost-dev libsqlite3-dev qttools5-dev qttools5-dev-tools -y
+    - apt update && apt -t experimental install libc++abi-dev libc++-dev clang llvm git ccache build-essential libtool autotools-dev automake pkg-config bsdmainutils python3-zmq libevent-dev libboost-dev libsqlite3-dev -y && apt install qttools5-dev qttools5-dev-tools -y
     - ccache --max-size=${CCACHE_SIZE}
   upstream_clone_script:
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
@@ -181,7 +181,7 @@ task:
   ccache_cache:
     folder: "/tmp/ccache_dir"
   install_script:
-    - apt update && apt -t experimental install git ccache build-essential libtool autotools-dev automake pkg-config bsdmainutils python3-zmq libevent-dev libboost-dev libdb++-dev qttools5-dev qttools5-dev-tools -y
+    - apt update && apt -t experimental install git ccache build-essential libtool autotools-dev automake pkg-config bsdmainutils python3-zmq libevent-dev libboost-dev libdb++-dev -y && apt install qttools5-dev qttools5-dev-tools -y
     - ccache --max-size=${CCACHE_SIZE}
   upstream_clone_script:
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core

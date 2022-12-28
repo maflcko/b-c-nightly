@@ -415,7 +415,7 @@ task:
     - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
     - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
     - make -j 16 check
-    - ./test/functional/test_runner.py -j 16 --timeout-factor=10
+    - ./test/functional/test_runner.py -j 8 --timeout-factor=10
 ## Disabled due to https://github.com/google/sanitizers/issues/1076
 #   Location is global '__TMC_END__' at 0x55960bb18a48 (fuzz+0x000001984a51)
 #  SUMMARY: ThreadSanitizer: data race src/logging.cpp:18 in LogInstance()

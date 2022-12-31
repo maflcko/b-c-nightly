@@ -202,7 +202,7 @@ task:
     - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
     - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
     - make check ${MAKEJOBS} VERBOSE=1
-    - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=9
+    - ./test/functional/test_runner.py $MAKEJOBS --exclude feature_dbcrash --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=9
 task:
   name: "Alpine [system libs]"
   container:

@@ -161,17 +161,37 @@ task:
     - cd bitcoin-core
     - ./autogen.sh
   matrix:
-    - name: "debian:experimental [system libs, clang, sqlite-only, asan, libc++]"
+    - name: "debian:experimental [system libs, asan, clang, sqlite-only, libc++]"
       install_matrix_script:
         - apt -t experimental install -y libc++abi-dev libc++-dev clang llvm libsqlite3-dev
         - cd bitcoin-core
         - ./configure --with-sanitizers=address,integer,undefined CC=clang CXX="clang++ -stdlib=libc++" || ( cat config.log && false)
-    - name: "debian:experimental [system libs, gcc, bdb-only, asan]"
+    - name: "debian:experimental [system libs, asan, clang, sqlite-only]"
+      install_matrix_script:
+        - apt -t experimental install -y clang llvm libsqlite3-dev
+        - cd bitcoin-core
+        - ./configure --with-sanitizers=address,integer,undefined CC=clang CXX="clang++" || ( cat config.log && false)
+    - name: "debian:experimental [system libs, asan, gcc, bdb-only]"
       install_matrix_script:
         - apt -t experimental install -y libdb++-dev
         - cd bitcoin-core
         - echo 'nonnull-attribute:streams.h' >> test/sanitizer_suppressions/ubsan  # runtime error: null pointer passed as argument 1, which is declared to never be null, fwrite
         - ./configure --with-sanitizers=address,undefined --with-incompatible-bdb || ( cat config.log && false)
+    - name: "debian:experimental [system libs, tsan, clang, sqlite-only, libc++]"
+      install_matrix_script:
+        - apt -t experimental install -y libc++abi-dev libc++-dev clang llvm libsqlite3-dev
+        - cd bitcoin-core
+        - ./configure --with-sanitizers=thread CC=clang CXX="clang++ -stdlib=libc++" || ( cat config.log && false)
+    - name: "debian:experimental [system libs, tsan, clang, sqlite-only]"
+      install_matrix_script:
+        - apt -t experimental install -y clang llvm libsqlite3-dev
+        - cd bitcoin-core
+        - ./configure --with-sanitizers=thread CC=clang CXX="clang++" || ( cat config.log && false)
+    - name: "debian:experimental [system libs, tsan, gcc, bdb-only]"
+      install_matrix_script:
+        - apt -t experimental install -y libdb++-dev
+        - cd bitcoin-core
+        - ./configure --with-sanitizers=thread --with-incompatible-bdb || ( cat config.log && false)
   make_script:
     - cd bitcoin-core
     - make ${MAKEJOBS} ${GOAL} || ( echo "Build failure. Verbose build follows." && make ${GOAL} V=1 ; false )
@@ -288,12 +308,9 @@ task:
     - cd bitcoin-core
     - ./ci/test_run_all.sh
 task:
-  name: "tsan, clang, system libs [fedora]"
+  name: "Fedora [system libs]"
   container:
     image: fedora:rawhide
-    cpu: 4
-    memory: 16G
-    greedy: true
   env:
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"
@@ -303,45 +320,14 @@ task:
     - dnf install git -y
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
   install_pkgs_script:
-    - dnf install gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb-cxx-devel python3 clang qt5-qttools-devel qt5-qtbase-devel sqlite-devel -y
+    - dnf install gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb-cxx-devel python3 qt5-qttools-devel qt5-qtbase-devel sqlite-devel -y
   build_script:
     - cd bitcoin-core
-    - ./autogen.sh && ./configure --enable-suppress-external-warnings --with-sanitizers=thread --with-incompatible-bdb CC=clang CXX=clang++
-    - make -j 6
-  san_test_script:
+    - ./autogen.sh && ./configure --enable-suppress-external-warnings --with-incompatible-bdb
+    - make -j 9
+  test_script:
     - cd bitcoin-core
-    - export LSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/lsan"
-    - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
-    - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
-    - make -j 6 check
-    - ./test/functional/test_runner.py -j 9 --timeout-factor=5
-task:
-  name: "tsan, gcc, system libs [fedora]"
-  container:
-    image: fedora:rawhide
-    cpu: 4
-    memory: 16G
-    greedy: true
-  env:
-    CCACHE_SIZE: "200M"
-    CCACHE_DIR: "/tmp/ccache_dir"
-  ccache_cache:
-    folder: "/tmp/ccache_dir"
-  upstream_clone_script:
-    - dnf install git -y
-    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
-  install_pkgs_script:
-    - dnf install libtsan gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb-cxx-devel python3 sqlite-devel -y
-  build_script:
-    - cd bitcoin-core
-    - ./autogen.sh && ./configure --enable-suppress-external-warnings --with-sanitizers=thread --with-incompatible-bdb
-    - make -j 6
-  san_test_script:
-    - cd bitcoin-core
-    - export LSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/lsan"
-    - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
-    - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
-    - make -j 6 check
+    - make -j 9 check
     - ./test/functional/test_runner.py -j 9 --timeout-factor=5
 ## Disabled due to https://github.com/google/sanitizers/issues/1076
 #   Location is global '__TMC_END__' at 0x55960bb18a48 (fuzz+0x000001984a51)

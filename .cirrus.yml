@@ -141,9 +141,11 @@ task:
     - cd bitcoin-core
     - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
 task:
-  name: "debian:experimental [system libs, clang, sqlite-only]"
   container:
     image: debian:experimental
+    cpu: 4
+    memory: 16G
+    greedy: true
   env:
     MAKEJOBS: "-j6"
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
@@ -152,52 +154,33 @@ task:
   ccache_cache:
     folder: "/tmp/ccache_dir"
   install_script:
-    - apt update && apt -t experimental install libc++abi-dev libc++-dev clang llvm git ccache build-essential libtool autotools-dev automake pkg-config bsdmainutils python3-zmq libevent-dev libboost-dev libsqlite3-dev qttools5-dev qttools5-dev-tools -y
+    - apt update && apt -t experimental install git ccache build-essential libtool autotools-dev automake pkg-config bsdmainutils python3-zmq libevent-dev libboost-dev qttools5-dev qttools5-dev-tools systemtap-sdt-dev libminiupnpc-dev libnatpmp-dev libqrencode-dev -y
     - ccache --max-size=${CCACHE_SIZE}
   upstream_clone_script:
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
-  configure_script:
     - cd bitcoin-core
     - ./autogen.sh
-    - ./configure --with-incompatible-bdb CC=clang CXX="clang++ -stdlib=libc++" || ( cat config.log && false)
+  matrix:
+    - name: "debian:experimental [system libs, clang, sqlite-only, asan, libc++]"
+      install_matrix_script:
+        - apt -t experimental install -y libc++abi-dev libc++-dev clang llvm libsqlite3-dev
+        - cd bitcoin-core
+        - ./configure --with-sanitizers=address,integer,undefined CC=clang CXX="clang++ -stdlib=libc++" || ( cat config.log && false)
+    - name: "debian:experimental [system libs, gcc, bdb-only, asan]"
+      install_matrix_script:
+        - apt -t experimental install -y libdb++-dev
+        - cd bitcoin-core
+        - ./configure --with-sanitizers=address,integer,undefined --with-incompatible-bdb || ( cat config.log && false)
   make_script:
     - cd bitcoin-core
     - make ${MAKEJOBS} ${GOAL} || ( echo "Build failure. Verbose build follows." && make ${GOAL} V=1 ; false )
   check_script:
     - cd bitcoin-core
+    - export LSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/lsan"
+    - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
+    - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
     - make check ${MAKEJOBS} VERBOSE=1
-  functional_test_script:
-    - cd bitcoin-core
-    - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
-task:
-  name: "debian:experimental [system libs, gcc, bdb-only]"
-  container:
-    image: debian:experimental
-  env:
-    MAKEJOBS: "-j6"
-    TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
-    CCACHE_SIZE: "200M"
-    CCACHE_DIR: "/tmp/ccache_dir"
-  ccache_cache:
-    folder: "/tmp/ccache_dir"
-  install_script:
-    - apt update && apt -t experimental install git ccache build-essential libtool autotools-dev automake pkg-config bsdmainutils python3-zmq libevent-dev libboost-dev libdb++-dev qttools5-dev qttools5-dev-tools -y
-    - ccache --max-size=${CCACHE_SIZE}
-  upstream_clone_script:
-    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
-  configure_script:
-    - cd bitcoin-core
-    - ./autogen.sh
-    - ./configure --with-incompatible-bdb || ( cat config.log && false)
-  make_script:
-    - cd bitcoin-core
-    - make ${MAKEJOBS} ${GOAL} || ( echo "Build failure. Verbose build follows." && make ${GOAL} V=1 ; false )
-  check_script:
-    - cd bitcoin-core
-    - make check ${MAKEJOBS} VERBOSE=1
-  functional_test_script:
-    - cd bitcoin-core
-    - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=3
+    - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=1000 --quiet --failfast --timeout-factor=9
 task:
   name: "Alpine [system libs]"
   container:

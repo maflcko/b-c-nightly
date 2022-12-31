@@ -170,7 +170,7 @@ task:
       install_matrix_script:
         - apt -t experimental install -y libdb++-dev
         - cd bitcoin-core
-        - ./configure --with-sanitizers=address,integer,undefined --with-incompatible-bdb || ( cat config.log && false)
+        - ./configure --with-sanitizers=address,undefined --with-incompatible-bdb || ( cat config.log && false)
   make_script:
     - cd bitcoin-core
     - make ${MAKEJOBS} ${GOAL} || ( echo "Build failure. Verbose build follows." && make ${GOAL} V=1 ; false )

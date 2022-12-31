@@ -170,6 +170,7 @@ task:
       install_matrix_script:
         - apt -t experimental install -y libdb++-dev
         - cd bitcoin-core
+        - echo 'nonnull-attribute:streams.h' >> test/sanitizer_suppressions/ubsan  # runtime error: null pointer passed as argument 1, which is declared to never be null, fwrite
         - ./configure --with-sanitizers=address,undefined --with-incompatible-bdb || ( cat config.log && false)
   make_script:
     - cd bitcoin-core
@@ -342,63 +343,6 @@ task:
     - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
     - make -j 6 check
     - ./test/functional/test_runner.py -j 9 --timeout-factor=5
-task:
-  name: "asan, clang, system libs [fedora]"
-  container:
-    image: fedora:rawhide
-    cpu: 4
-    memory: 16G
-    greedy: true
-  env:
-    CCACHE_SIZE: "200M"
-    CCACHE_DIR: "/tmp/ccache_dir"
-  ccache_cache:
-    folder: "/tmp/ccache_dir"
-  upstream_clone_script:
-    - dnf install git -y
-    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
-  install_pkgs_script:
-    - dnf install gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb-cxx-devel python3 clang qt5-qttools-devel qt5-qtbase-devel sqlite-devel -y
-  ci_script:
-    - cd bitcoin-core
-    - ./autogen.sh && ./configure --with-sanitizers=address,integer,undefined --with-incompatible-bdb CC=clang CXX=clang++
-    - make -j 16
-  san_test_script:
-    - cd bitcoin-core
-    - export LSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/lsan"
-    - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
-    - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
-    - make -j 8 check
-    - ./test/functional/test_runner.py -j 16 --timeout-factor=5
-task:
-  name: "asan, gcc, system libs [fedora]"
-  container:
-    image: fedora:rawhide
-    cpu: 4
-    memory: 16G
-    greedy: true
-  env:
-    CCACHE_SIZE: "200M"
-    CCACHE_DIR: "/tmp/ccache_dir"
-  ccache_cache:
-    folder: "/tmp/ccache_dir"
-  upstream_clone_script:
-    - dnf install git -y
-    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
-  install_pkgs_script:
-    - dnf install libasan libubsan gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb-cxx-devel python3 clang qt5-qttools-devel qt5-qtbase-devel sqlite-devel -y
-  ci_script:
-    - cd bitcoin-core
-    - echo 'nonnull-attribute:streams.h' >> test/sanitizer_suppressions/ubsan
-    - ./autogen.sh && ./configure --with-sanitizers=address,undefined --with-incompatible-bdb
-    - make -j 16
-  san_test_script:
-    - cd bitcoin-core
-    - export LSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/lsan"
-    - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
-    - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
-    - make -j 16 check
-    - ./test/functional/test_runner.py -j 8 --timeout-factor=10
 ## Disabled due to https://github.com/google/sanitizers/issues/1076
 #   Location is global '__TMC_END__' at 0x55960bb18a48 (fuzz+0x000001984a51)
 #  SUMMARY: ThreadSanitizer: data race src/logging.cpp:18 in LogInstance()

@@ -191,6 +191,7 @@ task:
       install_matrix_script:
         - apt -t experimental install -y libdb++-dev
         - cd bitcoin-core
+        - echo 'race:libQt5Core' >> test/sanitizer_suppressions/tsan
         - ./configure --with-sanitizers=thread --with-incompatible-bdb || ( cat config.log && false)
   make_script:
     - cd bitcoin-core

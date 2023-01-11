@@ -54,7 +54,7 @@ task:
   ccache_cache:
     folder: "/tmp/ccache_dir"
   install_script:
-    - pkg install -y m4 autoconf automake boost-libs git gmake libevent libtool pkgconf python3 ccache sqlite3
+    - pkg install -y m4 autoconf automake boost-libs git gmake libevent libtool pkgconf python3 ccache sqlite3 databases/py-sqlite3
     - ccache --max-size=${CCACHE_SIZE}
     - git clone https://github.com/stewartsmith/libeatmydata.git
     - cd libeatmydata

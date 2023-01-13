@@ -161,32 +161,32 @@ task:
     - cd bitcoin-core
     - ./autogen.sh
   matrix:
-    - name: "debian:experimental [system libs, asan, clang, sqlite-only, libc++]"
+    - name: "debian:experimental [system libs, asan, clang-16, sqlite-only, libc++]"
       install_matrix_script:
-        - apt -t experimental install -y libc++abi-dev libc++-dev clang llvm libsqlite3-dev
+        - apt -t experimental install -y libc++abi-16-dev libc++-16-dev clang-16 llvm-16 libsqlite3-dev libclang-rt-15-dev
         - cd bitcoin-core
-        - ./configure --with-sanitizers=address,integer,undefined CC=clang CXX="clang++ -stdlib=libc++" || ( cat config.log && false)
-    - name: "debian:experimental [system libs, asan, clang, sqlite-only]"
+        - ./configure --with-sanitizers=address,integer,undefined CC=clang-16 CXX="clang++-16 -stdlib=libc++" || ( cat config.log && false)
+    - name: "debian:experimental [system libs, asan, clang-16, sqlite-only]"
       install_matrix_script:
-        - apt -t experimental install -y clang llvm libsqlite3-dev
+        - apt -t experimental install -y clang-16 llvm-16 libsqlite3-dev libclang-rt-15-dev
         - cd bitcoin-core
-        - ./configure --with-sanitizers=address,integer,undefined CC=clang CXX="clang++" || ( cat config.log && false)
+        - ./configure --with-sanitizers=address,integer,undefined CC=clang-16 CXX="clang++-16" || ( cat config.log && false)
     - name: "debian:experimental [system libs, asan, gcc, bdb-only]"
       install_matrix_script:
         - apt -t experimental install -y libdb++-dev
         - cd bitcoin-core
         - echo 'nonnull-attribute:streams.h' >> test/sanitizer_suppressions/ubsan  # runtime error: null pointer passed as argument 1, which is declared to never be null, fwrite
         - ./configure --with-sanitizers=address,undefined --with-incompatible-bdb || ( cat config.log && false)
-    - name: "debian:experimental [system libs, tsan, clang, sqlite-only, libc++]"
+    - name: "debian:experimental [system libs, tsan, clang-16, sqlite-only, libc++]"
       install_matrix_script:
-        - apt -t experimental install -y libc++abi-dev libc++-dev clang llvm libsqlite3-dev
+        - apt -t experimental install -y libc++abi-16-dev libc++-16-dev clang-16 llvm-16 libsqlite3-dev libclang-rt-15-dev
         - cd bitcoin-core
-        - ./configure --with-sanitizers=thread CC=clang CXX="clang++ -stdlib=libc++" || ( cat config.log && false)
-    - name: "debian:experimental [system libs, tsan, clang, sqlite-only]"
+        - ./configure --with-sanitizers=thread CC=clang-16 CXX="clang++-16 -stdlib=libc++" || ( cat config.log && false)
+    - name: "debian:experimental [system libs, tsan, clang-16, sqlite-only]"
       install_matrix_script:
-        - apt -t experimental install -y clang llvm libsqlite3-dev
+        - apt -t experimental install -y clang-16 llvm-16 libsqlite3-dev libclang-rt-15-dev
         - cd bitcoin-core
-        - ./configure --with-sanitizers=thread CC=clang CXX="clang++" || ( cat config.log && false)
+        - ./configure --with-sanitizers=thread CC=clang-16 CXX="clang++-16" || ( cat config.log && false)
     - name: "debian:experimental [system libs, tsan, gcc, bdb-only]"
       install_matrix_script:
         - apt -t experimental install -y libdb++-dev

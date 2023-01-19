@@ -123,7 +123,8 @@ task:
     folder: "/tmp/ccache_dir"
   install_script:
     - dnf -y install epel-release
-    - dnf install -y ccache gcc-c++ libtool make git python3 python3-zmq boost-devel libevent-devel sqlite-devel zeromq-devel qt5-qtbase-devel qt5-qttools-devel # disabled for now: bdb, qrencode-devel, upnp
+    - dnf install -y ccache gcc-c++ libtool make git python38 python38-pip boost-devel libevent-devel sqlite-devel zeromq-devel qt5-qtbase-devel qt5-qttools-devel # disabled for now: bdb, qrencode-devel, upnp
+    - pip3 install zmq
     - ccache --max-size=${CCACHE_SIZE}
   upstream_clone_script:
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core

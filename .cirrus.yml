@@ -351,7 +351,7 @@ task:
 #    - dnf install gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb-cxx-devel python3 clang qt5-qttools-devel qt5-qtbase-devel -y
 #  ci_script:
 #    - cd bitcoin-core
-#    - ./autogen.sh && ./configure --with-sanitizers=fuzzer,thread --enable-fuzz --enable-c++17 --with-incompatible-bdb CC=clang CXX=clang++
+#    - ./autogen.sh && ./configure --with-sanitizers=fuzzer,thread --enable-fuzz --with-incompatible-bdb CC=clang CXX=clang++
 #    - make -j 4
 #  tsan_test_script:
 #    - cd bitcoin-core
@@ -379,7 +379,7 @@ task:
     - dnf install gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb-cxx-devel python3 clang qt5-qttools-devel qt5-qtbase-devel -y
   ci_script:
     - cd bitcoin-core
-    - ./autogen.sh && ./configure --with-sanitizers=fuzzer,address,integer,undefined --enable-fuzz --enable-c++17 --with-incompatible-bdb CC=clang CXX=clang++
+    - ./autogen.sh && ./configure --with-sanitizers=fuzzer,address,integer,undefined --enable-fuzz --with-incompatible-bdb CC=clang CXX=clang++
     - make -j 8
   tsan_test_script:
     - cd bitcoin-core

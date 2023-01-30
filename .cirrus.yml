@@ -66,11 +66,11 @@ task:
   upstream_clone_script:
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
     - cd bitcoin-core
-    - ./contrib/install_db4.sh $(pwd)
+    - gmake -C depends NO_BOOST=1 NO_LIBEVENT=1 NO_QT=1 NO_SQLITE=1 NO_NATPMP=1 NO_UPNP=1 NO_ZMQ=1 NO_USDT=1
   configure_script:
     - cd bitcoin-core
     - ./autogen.sh
-    - ./configure ${CONFIGURE_OPTS} BDB_LIBS="-L$(pwd)/db4/lib -ldb_cxx-4.8" BDB_CFLAGS="-I$(pwd)/db4/include" || ( cat config.log && false)
+    - ./configure ${CONFIGURE_OPTS} BDB_LIBS="-L$(pwd)/depends/$(./depends/config.guess)/lib -ldb_cxx-4.8" BDB_CFLAGS="-I$(pwd)/depends/$(./depends/config.guess)/include" || ( cat config.log && false)
   make_script:
     - cd bitcoin-core
     - gmake ${MAKEJOBS} || ( echo "Build failure. Verbose build follows." && gmake V=1 ; false )

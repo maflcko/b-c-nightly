@@ -287,9 +287,9 @@ task:
     - cd bitcoin-core
     - ./ci/test_run_all.sh
 task:
-  name: "valgrind, system libs [jammy]"
+  name: "valgrind, system libs [ubuntu:devel]"
   container:
-    image: ubuntu:22.04  # valgrind supp is for bionic/focal, but use 22.04 to avoid std::optional false-positive
+    image: ubuntu:devel  # valgrind supp is for bionic/focal, but use 22.04+ (devel) to avoid std::optional false-positive
     cpu: 4
     memory: 16G  # valgrind needs a lot of memory
     greedy: true
@@ -388,9 +388,9 @@ task:
     - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
     - ./test/fuzz/test_runner.py -j 8 -l DEBUG ../qa-assets/fuzz_seed_corpus/
 task:
-  name: "fuzz, system libs, enable debug [jammy]"
+  name: "fuzz, system libs, enable debug [ubuntu:devel]"
   container:
-    image: ubuntu:22.04
+    image: ubuntu:devel
   env:
     FILE_ENV: "./ci/test/00_setup_env_native_fuzz_enable_debug.sh"
     MAKEJOBS: "-j8"
@@ -409,9 +409,9 @@ task:
     - cd bitcoin-core
     - ./ci/test_run_all.sh
 task:
-  name: "fuzz, depends DEBUG [jammy]"
+  name: "fuzz, depends DEBUG [ubuntu:devel]"
   container:
-    image: ubuntu:22.04
+    image: ubuntu:devel
   env:
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"

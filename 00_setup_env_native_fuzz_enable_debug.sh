@@ -6,12 +6,12 @@
 
 export LC_ALL=C.UTF-8
 
-export DOCKER_NAME_TAG="ubuntu:22.04"
+export DOCKER_NAME_TAG="ubuntu:23.04"
 export CONTAINER_NAME=ci_native_fuzz_enable_debug
-export PACKAGES="clang llvm python3 libevent-dev bsdmainutils libboost-dev"
+export PACKAGES="clang-16 llvm-16 libclang-rt-16-dev python3 libevent-dev bsdmainutils libboost-dev"
 export NO_DEPENDS=1
 export RUN_UNIT_TESTS=false
 export RUN_FUNCTIONAL_TESTS=false
 export RUN_FUZZ_TESTS=true
 export GOAL="install"
-export BITCOIN_CONFIG="--enable-fuzz --enable-debug --with-sanitizers=fuzzer CC=clang CXX=clang++"
+export BITCOIN_CONFIG="--enable-fuzz --enable-debug --with-sanitizers=fuzzer CC=clang-16 CXX=clang++-16"

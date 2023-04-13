@@ -289,7 +289,7 @@ task:
 task:
   name: "valgrind, system libs [ubuntu:devel]"
   container:
-    image: ubuntu:devel  # valgrind supp is for bionic/focal, but use 22.04+ (devel) to avoid std::optional false-positive
+    image: ubuntu:devel  # valgrind supp is for debian:bookworm, but use devel to find nightly issues earlier
     cpu: 4
     memory: 16G  # valgrind needs a lot of memory
     greedy: true

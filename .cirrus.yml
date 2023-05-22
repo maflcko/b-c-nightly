@@ -111,37 +111,6 @@ task:
     - cd bitcoin-core
     - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=199999000 --quiet --failfast --timeout-factor=3
 task:
-  name: "CentOS 8 [system libs]"
-  container:
-    image: quay.io/centos/centos:stream8
-  env:
-    MAKEJOBS: "-j6"
-    TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
-    CCACHE_SIZE: "200M"
-    CCACHE_DIR: "/tmp/ccache_dir"
-  ccache_cache:
-    folder: "/tmp/ccache_dir"
-  install_script:
-    - dnf -y install epel-release
-    - dnf install -y ccache gcc-c++ libtool make git python38 python38-pip boost-devel libevent-devel sqlite-devel zeromq-devel qt5-qtbase-devel qt5-qttools-devel # disabled for now: bdb, qrencode-devel, upnp
-    - pip3 install zmq
-    - ccache --max-size=${CCACHE_SIZE}
-  upstream_clone_script:
-    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
-  configure_script:
-    - cd bitcoin-core
-    - ./autogen.sh
-    - ./configure --with-incompatible-bdb || ( cat config.log && false)
-  make_script:
-    - cd bitcoin-core
-    - make ${MAKEJOBS} || ( echo "Build failure. Verbose build follows." && make V=1 ; false )
-  check_script:
-    - cd bitcoin-core
-    - make check ${MAKEJOBS} VERBOSE=1
-  functional_test_script:
-    - cd bitcoin-core
-    - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=199999000 --quiet --failfast --timeout-factor=3
-task:
   container:
     image: debian:experimental
     cpu: 4

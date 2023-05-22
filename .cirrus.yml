@@ -117,7 +117,7 @@ task:
     memory: 16G
     greedy: true
   env:
-    MAKEJOBS: "-j9"
+    MAKEJOBS: "-j6"  # Reduce jobs to avoid OOM under gcc
     TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
     CCACHE_SIZE: "200M"
     CCACHE_DIR: "/tmp/ccache_dir"

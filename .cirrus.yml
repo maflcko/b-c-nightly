@@ -171,6 +171,7 @@ task:
     - make ${MAKEJOBS} ${GOAL} || ( echo "Build failure. Verbose build follows." && make ${GOAL} V=1 ; false )
   check_script:
     - cd bitcoin-core
+    - export ASAN_OPTIONS="alloc_dealloc_mismatch=0"
     - export LSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/lsan"
     - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
     - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"

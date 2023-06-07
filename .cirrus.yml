@@ -237,6 +237,29 @@ task:
     - cd bitcoin-core
     - ./test/functional/test_runner.py $MAKEJOBS --ci --extended --combinedlogslen=199999000 --quiet --failfast --timeout-factor=3
 task:
+  name: "Android [no cache]"
+  container:
+    image: ubuntu:jammy
+    cpu: 2
+    memory: 8G
+    greedy: true
+  env:
+    FILE_ENV: "./ci/test/00_setup_env_android.sh"
+    MAKEJOBS: "-j10"
+    DANGER_RUN_CI_ON_HOST: "1"
+    TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
+    CCACHE_SIZE: "200M"
+    CCACHE_DIR: "/tmp/ccache_dir"
+  ccache_cache:
+    folder: "/tmp/ccache_dir"
+  upstream_clone_script:
+    - apt update && apt install git -y
+    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
+    - cd bitcoin-core
+  ci_script:
+    - cd bitcoin-core
+    - ./ci/test_run_all.sh
+task:
   name: "s390x qemu"
   container:
     image: debian:bookworm

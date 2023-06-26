@@ -260,9 +260,9 @@ task:
     - cd bitcoin-core
     - ./ci/test_run_all.sh
 task:
-  name: "s390x qemu"
+  name: "s390x qemu [sid]"
   container:
-    image: debian:bookworm
+    image: debian:sid  # env file is for bookworm, but use sid to find nightly issues earlier
     cpu: 4
     memory: 10G
     greedy: true

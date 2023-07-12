@@ -327,34 +327,31 @@ task:
     - cd bitcoin-core
     - make -j 9 check
     - ./test/functional/test_runner.py -j 9 --timeout-factor=5
-## Disabled due to https://github.com/google/sanitizers/issues/1076
-#   Location is global '__TMC_END__' at 0x55960bb18a48 (fuzz+0x000001984a51)
-#  SUMMARY: ThreadSanitizer: data race src/logging.cpp:18 in LogInstance()
-#task:
-#  name: "fedora [system libs, fuzz, tsan]"
-#  container:
-#    image: fedora:rawhide
-#  env:
-#    CCACHE_SIZE: "200M"
-#    CCACHE_DIR: "/tmp/ccache_dir"
-#  ccache_cache:
-#    folder: "/tmp/ccache_dir"
-#  upstream_clone_script:
-#    - dnf install git -y
-#    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
-#    - git clone https://github.com/bitcoin-core/qa-assets --depth=1
-#  install_pkgs_script:
-#    - dnf install gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb-cxx-devel python3 clang qt5-qttools-devel qt5-qtbase-devel -y
-#  ci_script:
-#    - cd bitcoin-core
-#    - ./autogen.sh && ./configure --with-sanitizers=fuzzer,thread --enable-fuzz --with-incompatible-bdb CC=clang CXX=clang++
-#    - make -j 4
-#  tsan_test_script:
-#    - cd bitcoin-core
-#    - export LSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/lsan"
-#    - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
-#    - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
-#    - ./test/fuzz/test_runner.py -j 4 -l DEBUG ../qa-assets/fuzz_seed_corpus/
+task:
+  name: "fuzz, tsan, system libs [fedora]"
+  container:
+    image: fedora:rawhide
+  env:
+    CCACHE_SIZE: "200M"
+    CCACHE_DIR: "/tmp/ccache_dir"
+  ccache_cache:
+    folder: "/tmp/ccache_dir"
+  upstream_clone_script:
+    - dnf install git -y
+    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
+    - git clone https://github.com/bitcoin-core/qa-assets --depth=1
+  install_pkgs_script:
+    - dnf install gcc-c++ libtool make autoconf automake libevent-devel boost-devel sqlite-devel python3 clang qt5-qttools-devel qt5-qtbase-devel -y
+  ci_script:
+    - cd bitcoin-core
+    - ./autogen.sh && ./configure --with-sanitizers=fuzzer,thread --enable-fuzz CC=clang CXX=clang++
+    - make -j 4
+  tsan_test_script:
+    - cd bitcoin-core
+    - export LSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/lsan"
+    - export TSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/tsan:halt_on_error=1"
+    - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
+    - ./test/fuzz/test_runner.py -j 4 -l DEBUG ../qa-assets/fuzz_seed_corpus/
 task:
   name: "fuzz, asan, system libs [fedora]"
   container:
@@ -372,10 +369,10 @@ task:
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
     - git clone https://github.com/bitcoin-core/qa-assets --depth=1
   install_pkgs_script:
-    - dnf install gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb-cxx-devel python3 clang qt5-qttools-devel qt5-qtbase-devel -y
+    - dnf install gcc-c++ libtool make autoconf automake libevent-devel boost-devel sqlite-devel python3 clang qt5-qttools-devel qt5-qtbase-devel -y
   ci_script:
     - cd bitcoin-core
-    - ./autogen.sh && ./configure --with-sanitizers=fuzzer,address,integer,undefined --enable-fuzz --with-incompatible-bdb CC=clang CXX=clang++
+    - ./autogen.sh && ./configure --with-sanitizers=fuzzer,address,integer,undefined --enable-fuzz CC=clang CXX=clang++
     - make -j 8
   tsan_test_script:
     - cd bitcoin-core

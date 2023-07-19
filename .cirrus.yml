@@ -356,26 +356,6 @@ task:
     - export UBSAN_OPTIONS="suppressions=$(pwd)/test/sanitizer_suppressions/ubsan:print_stacktrace=1:halt_on_error=1"
     - ./test/fuzz/test_runner.py -j 8 -l DEBUG ../qa-assets/fuzz_seed_corpus/
 task:
-  name: "fuzz, system libs, enable debug [ubuntu:devel]"
-  container:
-    image: ubuntu:devel
-  env:
-    FILE_ENV: "./ci/test/00_setup_env_native_fuzz_enable_debug.sh"
-    MAKEJOBS: "-j8"
-    DANGER_RUN_CI_ON_HOST: "1"
-    CCACHE_SIZE: "200M"
-    CCACHE_DIR: "/tmp/ccache_dir"
-  ccache_cache:
-    folder: "/tmp/ccache_dir"
-  upstream_clone_script:
-    - apt update && apt install git -y
-    - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
-    - cd bitcoin-core
-    - mv ../00_setup_env_native_fuzz_enable_debug.sh ./ci/test/
-  ci_script:
-    - cd bitcoin-core
-    - ./ci/test_run_all.sh
-task:
   name: "fuzz, depends DEBUG [ubuntu:devel]"
   container:
     image: ubuntu:devel

@@ -218,7 +218,7 @@ task:
   ccache_cache:
     folder: "/tmp/ccache_dir"
   upstream_clone_script:
-    - apt update && apt install git -y
+    - apt update && apt install python3 rsync git -y
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
     - cd bitcoin-core
   ci_script:

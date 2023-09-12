@@ -7,41 +7,6 @@ env:
   TEST_RUNNER_PORT_MIN: "14000"  # Must be larger than 12321, which is used for the http cache. See https://cirrus-ci.org/guide/writing-tasks/#http-cache
   DEBIAN_FRONTEND: "noninteractive"
 task:
-  name: "Windows [gitian]"
-  windows_container:
-    image: cirrusci/windowsservercore:2019
-  env:
-    CIRRUS_SHELL: powershell
-    PATH: 'C:\Python37;C:\Python37\Scripts;%PATH%'
-    PYTHONUTF8: 1
-    PYTHONIOENCODING: 'UTF-8'
-    SHASUM: 'sha256sum'
-  install_script:
-    - choco install python --version=3.7.7 -y
-    - powershell "python --version"
-    - powershell 'C:\Python37\Scripts\pip install pyzmq'
-  download_script:
-    - git clone https://github.com/bitcoin/bitcoin.git ./bitcoin-core-nightly
-    - cd bitcoin-core-nightly
-    - set SRCDIR=$(pwd)
-    - echo $SRCDIR
-    - powershell "python ../download_latest_nightly.py --bin=WIN --srcdir=${SRCDIR}"
-    - set VERSION=$(tail -1 ./version.txt)
-    - set BUILDDIR=$(tail -1 ./build_dir.txt)
-    - echo $VERSION
-    - echo $BUILDDIR
-#   script:
-#    - ${BUILDDIR}/src/test_bitcoin.exe
-#    - cd ${SRCDIR}
-#    - git checkout $VERSION
-#    - powershell "${PYTHON} ./test/util/bitcoin-util-test.py -v"
-#    - powershell "${PYTHON} ./test/functional/test_runner.py --timeout-factor=10"
-#after_script:
-#    - cd ${SRCDIR}
-#    - git log -1
-#    - cd ${BUILDDIR}
-#    - $SHASUM ./src/*
-task:
   name: "FreeBSD 13.2 [system libs]"
   freebsd_instance:
     image_family: freebsd-13-2  # https://cirrus-ci.org/guide/FreeBSD/

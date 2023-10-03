@@ -90,6 +90,12 @@ task:
     CCACHE_DIR: "/tmp/ccache_dir"
   ccache_cache:
     folder: "/tmp/ccache_dir"
+  info_script:
+    - free -m -h
+    - nproc
+    - uname --kernel-name --kernel-release
+    - lscpu
+    - df -h
   install_script:
     - apt update && apt install -y git && apt install -y git ccache build-essential libtool autotools-dev automake pkg-config bsdmainutils python3-zmq libevent-dev libboost-dev qttools5-dev qttools5-dev-tools systemtap-sdt-dev libminiupnpc-dev libnatpmp-dev libqrencode-dev libzmq3-dev
     - ccache --max-size=${CCACHE_SIZE}

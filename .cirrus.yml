@@ -21,7 +21,7 @@ task:
   ccache_cache:
     folder: "/tmp/ccache_dir"
   install_script:
-    - pkg install -y m4 autoconf automake boost-libs git gmake libevent libtool pkgconf python3 ccache sqlite3 databases/py-sqlite3
+    - pkg install -y chattr m4 autoconf automake boost-libs git gmake libevent libtool pkgconf python3 ccache sqlite3 databases/py-sqlite3
     - ccache --max-size=${CCACHE_SIZE}
     - git clone https://github.com/stewartsmith/libeatmydata.git
     - cd libeatmydata
@@ -60,7 +60,7 @@ task:
     folder: "/tmp/ccache_dir"
   install_script:
     - zypper --non-interactive install -t pattern devel_basis
-    - zypper --non-interactive install git libtool pkg-config automake python3 libevent-devel libboost_headers-devel gcc-c++ ccache zeromq-devel libqt5-qtbase-devel libqt5-qttools-devel qrencode-devel sqlite3-devel
+    - zypper --non-interactive install e2fsprogs git libtool pkg-config automake python3 libevent-devel libboost_headers-devel gcc-c++ ccache zeromq-devel libqt5-qtbase-devel libqt5-qttools-devel qrencode-devel sqlite3-devel
     - ccache --max-size=${CCACHE_SIZE}
   upstream_clone_script:
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
@@ -118,7 +118,8 @@ task:
       install_matrix_script:
         - apt install -y libdb++-dev
         - cd bitcoin-core
-        - echo 'nonnull-attribute:streams.h' >> test/sanitizer_suppressions/ubsan  # runtime error: null pointer passed as argument 1, which is declared to never be null, fwrite
+        - echo 'nonnull-attribute:streams.h'   >> test/sanitizer_suppressions/ubsan  # runtime error: null pointer passed as argument 1, which is declared to never be null, fwrite
+        - echo 'nonnull-attribute:streams.cpp' >> test/sanitizer_suppressions/ubsan  # runtime error: null pointer passed as argument 1, which is declared to never be null, fwrite
         - ./configure --with-sanitizers=address,undefined --with-incompatible-bdb || ( cat config.log && false)
     - name: "ubuntu:devel [system libs, tsan, clang, sqlite-only, libc++]"
       install_matrix_script:
@@ -161,7 +162,7 @@ task:
   ccache_cache:
     folder: "/tmp/ccache_dir"
   install_script:
-    - apk --no-cache --update add autoconf automake g++ gcc git libtool make pkgconfig python3 boost-dev libevent-dev zeromq-dev qt5-qtbase-dev qt5-qttools-dev ccache
+    - apk --no-cache --update add e2fsprogs-extra autoconf automake g++ gcc git libtool make pkgconfig python3 boost-dev libevent-dev zeromq-dev qt5-qtbase-dev qt5-qttools-dev ccache
     - ccache --max-size=${CCACHE_SIZE}
   upstream_clone_script:
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
@@ -190,7 +191,7 @@ task:
   ccache_cache:
     folder: "/tmp/ccache_dir"
   install_script:
-    - pacman --noconfirm -Syu autoconf automake git gcc libtool make pkg-config python3 boost libevent zeromq ccache qt5
+    - pacman --noconfirm -Syu chattr autoconf automake git gcc libtool make pkg-config python3 boost libevent zeromq ccache qt5
     - ccache --max-size=${CCACHE_SIZE}
   upstream_clone_script:
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
@@ -243,7 +244,7 @@ task:
     - dnf install git -y
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
   install_pkgs_script:
-    - dnf install ccache gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb-cxx-devel python3 qt5-qttools-devel qt5-qtbase-devel sqlite-devel qrencode-devel systemtap zeromq-devel miniupnpc-devel libnatpmp-devel -y
+    - dnf install e2fsprogs ccache gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb-cxx-devel python3 qt5-qttools-devel qt5-qtbase-devel sqlite-devel qrencode-devel systemtap zeromq-devel miniupnpc-devel libnatpmp-devel -y
   build_script:
     - cd bitcoin-core
     - ./autogen.sh && ./configure --enable-suppress-external-warnings --with-incompatible-bdb

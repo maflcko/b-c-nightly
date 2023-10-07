@@ -191,7 +191,7 @@ task:
   ccache_cache:
     folder: "/tmp/ccache_dir"
   install_script:
-    - pacman --noconfirm -Syu chattr autoconf automake git gcc libtool make pkg-config python3 boost libevent zeromq ccache qt5
+    - pacman --noconfirm -Syu e2fsprogs autoconf automake git gcc libtool make pkg-config python3 boost libevent zeromq ccache qt5
     - ccache --max-size=${CCACHE_SIZE}
   upstream_clone_script:
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
@@ -270,7 +270,7 @@ task:
     - git clone https://github.com/bitcoin/bitcoin --depth=1 ./bitcoin-core
     - git clone https://github.com/bitcoin-core/qa-assets --depth=1
   install_pkgs_script:
-    - dnf install gcc-c++ libtool make autoconf automake libevent-devel boost-devel sqlite-devel python3 clang qt5-qttools-devel qt5-qtbase-devel -y
+    - dnf install gcc-c++ libtool make autoconf automake libevent-devel boost-devel sqlite-devel python3 clang llvm qt5-qttools-devel qt5-qtbase-devel -y
   ci_script:
     - cd bitcoin-core
     - ./autogen.sh && ./configure --with-sanitizers=fuzzer,address,integer,undefined,float-divide-by-zero --enable-fuzz CC=clang CXX=clang++
